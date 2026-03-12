@@ -224,6 +224,8 @@ let fd = {};
 let viewOwner = ME; // ME or TEAM
 let designType = 'banner';
 let designChecks = {};
+let designStep = 1;
+let designBrief = {campaignName:'',target:'',outputType:'banner',keywords:[],moods:[],colors:[],tones:[],refs:[],request:'',deadline:'',assignees:[]};
 let deployChecks = {};
 let impactInput = '';
 let impactResult = [];
@@ -235,6 +237,7 @@ function load() {
   try { const r=localStorage.getItem(SK); if(r) S=JSON.parse(r); } catch{}
   S.members = ALL_MEMBERS;
   if(!S.impactHistory) S.impactHistory=[];
+  if(!S.designHistory) S.designHistory=[];
 }
 function save() { localStorage.setItem(SK, JSON.stringify(S)); }
 
@@ -340,35 +343,81 @@ const IMPACT_RULES=[
   {keywords:['재고','stock','품절','soldout'],area:'재고/품절 표시',risk:'medium',desc:'PLP/PDP 재고 UI, 장바구니 버튼 상태 영향'},
 ];
 
-const DESIGN_REFS={
-  banner:{
-    refs:[
-      {title:'LG Electronics 글로벌 캠페인 스타일',desc:'제품 중심 미니멀 구도, 짙은 배경 대비 하이라이트. 카피 1-2줄로 간결하게.',tags:['미니멀','제품중심','다크톤']},
-      {title:'라이프스타일 배너 트렌드',desc:'실제 사용 환경 연출, 온기 있는 인테리어 배경. 제품+사람의 자연스러운 결합.',tags:['라이프스타일','웜톤','사용환경']},
-      {title:'기능 강조 배너',desc:'핵심 수치/기능 크게 강조. 레드/옐로우 포인트 컬러, CTA 시인성 최우선.',tags:['혜택강조','CTA','시인성']},
-    ],
-    tips:'배너는 3초 안에 메시지 전달이 핵심. 카피 15자 이내, CTA는 동사로 시작하세요.',
-    checks:['타겟 고객군 정의됐나요?','메인 메시지 3초 안에 읽히나요?','CTA 문구/버튼 있나요?','모바일/PC 사이즈 가이드 전달했나요?','브랜드 컬러 팔레트 준수했나요?','텍스트-배경 명도 대비 확인했나요?'],
-  },
-  keyvisual:{
-    refs:[
-      {title:'LG OLED 캠페인 KV',desc:'블랙 배경으로 빛과 색 대비 극대화. 감성 카피로 경험 전달.',tags:['블랙배경','빛표현','감성카피']},
-      {title:'프리미엄 가전 KV',desc:'생활공간 자연스럽게 배치, 라이프스타일 전달. 모델 시선과 제품 방향 일치.',tags:['라이프스타일','모델활용','공간연출']},
-      {title:'계절/시즌 캠페인 KV',desc:'시즌 감성 컬러(봄:파스텔/여름:쿨톤/가을:어스톤/겨울:딥톤) 적극 활용.',tags:['시즌컬러','오브젝트','감성']},
-    ],
-    tips:'KV는 캠페인 전체 톤을 결정해요. 첫 시안은 방향이 다른 2-3안 받아 선택 후 발전시키는 방식 추천.',
-    checks:['캠페인 메인 슬로건 확정됐나요?','타겟 감성 방향 합의됐나요?','사용 채널 확인했나요?','컬러 방향성 공유됐나요?','모델/오브젝트 사용 여부 결정됐나요?','시안 피드백 일정 잡혔나요?'],
-  },
-  detail:{
-    refs:[
-      {title:'상세페이지 기본 구조',desc:'헤더KV → 스펙 → 기능 섹션 → 라이프스타일 → CTA 순서. 섹션당 1화면 이내.',tags:['구조','섹션분리','흐름']},
-      {title:'스크롤 스토리텔링',desc:'스크롤할수록 제품 스토리 전개. 모션/애니메이션으로 몰입감 극대화.',tags:['스토리텔링','모션','몰입']},
-      {title:'모바일 최적화',desc:'이미지 위주, 텍스트 최소화. 핵심 스펙 아이콘+숫자 요약. CTA Fixed 배치.',tags:['모바일','이미지중심','Fixed CTA']},
-    ],
-    tips:'핵심 정보는 상단 3개 섹션에. 구매 CTA는 여러 곳에 반복 노출이 효과적.',
-    checks:['페이지 목적 명확히 정의했나요?','섹션 구성 기획서 있나요?','제품 스펙 데이터 최신인가요?','모바일/PC 레이아웃 별도 가이드 줬나요?','CTA 문구와 링크 확인됐나요?','SEO 텍스트 영역 포함됐나요?'],
+// ═══════════════════════════════════════════════════
+// DESIGN ENGINE
+// ═══════════════════════════════════════════════════
+const MOODS = [
+  {key:'premium',label:'프리미엄',icon:'✨',desc:'고급스럽고 절제된'},
+  {key:'warm',label:'웜/라이프스타일',icon:'🌿',desc:'따뜻하고 일상적인'},
+  {key:'bold',label:'볼드/강렬',icon:'⚡',desc:'강하고 임팩트있는'},
+  {key:'clean',label:'클린/미니멀',icon:'◻',desc:'깔끔하고 심플한'},
+  {key:'playful',label:'펀/캐주얼',icon:'🎉',desc:'밝고 친근한'},
+  {key:'seasonal',label:'시즌/감성',icon:'🍂',desc:'계절감 있는'},
+];
+const COLOR_DIRS = [
+  {key:'dark',label:'다크톤',colors:['#1a1a2e','#16213e','#0f3460']},
+  {key:'warm',label:'웜톤',colors:['#f5e6d3','#e8c9a0','#d4956a']},
+  {key:'cool',label:'쿨톤',colors:['#e8f4fd','#b3d9f2','#4a9eca']},
+  {key:'vivid',label:'비비드',colors:['#ff4757','#ffd32a','#3742fa']},
+  {key:'pastel',label:'파스텔',colors:['#ffeaa7','#dfe6e9','#fd79a8']},
+  {key:'mono',label:'모노크롬',colors:['#f5f5f5','#888888','#1a1a1a']},
+  {key:'earth',label:'어스톤',colors:['#8B6914','#A0785A','#C4A882']},
+  {key:'neon',label:'네온/팝',colors:['#00ff88','#ff0080','#7700ff']},
+];
+const TONES = ['밝고 경쾌하게','고급스럽고 무게감 있게','친근하고 따뜻하게','강렬하고 임팩트있게','감성적이고 서정적으로','심플하고 직관적으로'];
+
+// 키워드 기반 레퍼런스 추천 엔진
+const KEYWORD_MAP = [
+  {keywords:['냉장고','에어컨','세탁기','건조기','청소기','공기청정기'],mood:'premium',color:'dark',refs:['LG 시그니처 캠페인 스타일 — 블랙 배경, 제품 단독 조명 연출','기능 인포그래픽 — 핵심 스펙 수치를 타이포로 강조'],tip:'가전 프리미엄 제품은 어두운 배경에 제품 디테일을 강조하는 것이 효과적이에요.'},
+  {keywords:['봄','spring','새학기','3월','4월','5월'],mood:'warm',color:'pastel',refs:['파스텔 그라데이션 배경 + 플라워/그린 오브젝트','화사하고 밝은 톤 — 화이트/크림 베이스에 포인트 컬러'],tip:'봄 시즌은 파스텔 계열 + 자연물 오브젝트 조합이 클릭률이 높아요.'},
+  {keywords:['여름','summer','6월','7월','8월','쿨','시원'],mood:'bold',color:'cool',refs:['쿨톤 블루/민트 배경 — 시원함 직관적 전달','물/얼음/바람 모션 오브젝트 활용'],tip:'여름 캠페인은 쿨한 색감 + 시원함을 연상시키는 오브젝트가 핵심이에요.'},
+  {keywords:['가을','autumn','fall','10월','11월'],mood:'seasonal',color:'earth',refs:['어스톤 배경 — 브라운/오렌지/베이지 조합','낙엽/따뜻한 빛 오브젝트로 감성 연출'],tip:'가을 캠페인은 어스톤 컬러 + 따뜻한 감성 이미지가 공감대를 높여요.'},
+  {keywords:['겨울','winter','크리스마스','12월','1월','연말'],mood:'premium',color:'dark',refs:['딥 네이비/블랙 배경 — 골드/실버 포인트','연말 감성 — 빛/반짝임 이펙트 적극 활용'],tip:'연말 캠페인은 골드·실버 포인트 컬러로 특별함을 강조하세요.'},
+  {keywords:['할인','세일','혜택','특가','이벤트','프로모션'],mood:'bold',color:'vivid',refs:['레드/옐로우 포인트 — 가격/혜택 수치 최대 강조','CTA 버튼 면적 확대, 혜택 텍스트 계층 명확히'],tip:'혜택 강조 배너는 수치를 크게, CTA를 명확하게. 복잡한 정보는 리스트로 정리하세요.'},
+  {keywords:['신제품','신규','출시','런칭','new'],mood:'clean',color:'mono',refs:['화이트 배경 — 제품 단독 부각','티저 형식 — 궁금증 유발 카피 활용'],tip:'신제품 런칭은 제품 자체에 집중하는 클린한 구성이 신뢰감을 높여요.'},
+  {keywords:['키즈','어린이','아이','child','kids'],mood:'playful',color:'pastel',refs:['밝고 채도 높은 컬러 — 펀하고 친근한 분위기','캐릭터/일러스트 활용으로 아이 시선 집중'],tip:'키즈 타겟은 원색 계열의 밝고 활기찬 톤이 어필해요.'},
+  {keywords:['프리미엄','럭셔리','하이엔드','고급'],mood:'premium',color:'dark',refs:['블랙/딥그레이 배경 — 절제된 레이아웃','골드 포인트 컬러 — 고급감 부각'],tip:'프리미엄 포지셔닝은 여백과 절제가 핵심이에요. 정보를 덜어내세요.'},
+  {keywords:['가족','홈','인테리어','라이프스타일','집'],mood:'warm',color:'warm',refs:['따뜻한 인테리어 배경 + 가족/생활 연출','제품이 일상 속에 자연스럽게 녹아드는 구도'],tip:'라이프스타일 이미지는 실제 생활환경을 연출할수록 공감도가 높아요.'},
+];
+
+function getDesignRecs(keywords) {
+  if(!keywords.length) return null;
+  const kStr = keywords.join(' ').toLowerCase();
+  for(const map of KEYWORD_MAP) {
+    if(map.keywords.some(k=>kStr.includes(k))) return map;
   }
-};
+  return null;
+}
+
+function genBriefText(b) {
+  const moodLabel = MOODS.find(m=>m.key===b.moods[0])?.label || b.moods[0] || '미정';
+  const colorLabel = COLOR_DIRS.find(c=>c.key===b.colors[0])?.label || b.colors[0] || '미정';
+  const assigneeStr = b.assignees.length ? b.assignees.join(', ') : '미정';
+  const typeMap = {banner:'배너',keyvisual:'Key Visual',detail:'상세페이지'};
+  return `📋 디자인 브리프
+━━━━━━━━━━━━━━━━━━━━━━
+캠페인명: ${b.campaignName||'(미입력)'}
+산출물: ${typeMap[b.outputType]||b.outputType}
+타겟: ${b.target||'(미입력)'}
+마감일: ${b.deadline||'(미입력)'}
+담당: ${assigneeStr}
+
+━━━━━━━━━━━━━━━━━━━━━━
+🎨 디자인 방향
+키워드: ${b.keywords.length?b.keywords.join(', '):'(미입력)'}
+무드: ${b.moods.map(k=>MOODS.find(m=>m.key===k)?.label||k).join(', ')||'미정'}
+컬러: ${b.colors.map(k=>COLOR_DIRS.find(c=>c.key===k)?.label||k).join(', ')||'미정'}
+톤앤매너: ${b.tones.join(', ')||'미정'}
+
+━━━━━━━━━━━━━━━━━━━━━━
+📝 요청사항
+${b.request||'(없음)'}
+
+━━━━━━━━━━━━━━━━━━━━━━
+📌 참고 레퍼런스
+${b.refs.length?b.refs.map((r,i)=>`${i+1}. ${r}`).join('\n'):'(없음)'}
+━━━━━━━━━━━━━━━━━━━━━━`;
+}
 
 // ═══════════════════════════════════════════════════
 // RENDER
@@ -571,9 +620,10 @@ function taskCard(t) {
       <div class="tc-meta">
         <span>시작: ${fmt(t.startDate)}</span>
         <span>마감: ${fmt(t.dueDate)}</span>
-        <span>👤 ${esc(t.assignee||'-')}</span>
+        <span>👤 ${esc(t.assignee||'-')}${t.assignee===ME?' (나)':t.assignee===TEAM?' (책임님)':''}</span>
         ${estD&&t.status!=='Done'?`<span style="color:#c8a84b">예상 ${estD}일</span>`:''}
       </div>
+      ${(t.workers&&t.workers.length)?`<div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:5px">${t.workers.map(w=>{const role=Object.entries(TEAM_MEMBERS).find(([,ms])=>ms.includes(w))?.[0];const rc={기획:'#c8a84b',디자인:'#e96d9b',퍼블:'#00c2d4',개발:'#3d9be9'}[role]||'#888';return`<span style="font-size:10px;padding:2px 7px;border-radius:99px;background:${rc}18;color:${rc}">${w}</span>`;}).join('')}</div>`:''}
       ${t.memo?`<div class="tc-memo">${esc(t.memo)}</div>`:''}
     </div>
     <div class="tc-right">
@@ -606,11 +656,6 @@ function renderForm() {
     ${WORK_TYPES.map(wt=>{const c=WORK_TYPE_COLORS[wt];return`<button onclick="fd.workType='${wt}';render()" style="padding:6px 12px;border-radius:99px;border:1px solid ${(f.workType||'')=== wt?c:'#ffffff12'};background:${(f.workType||'')=== wt?c+'20':'#ffffff05'};color:${(f.workType||'')=== wt?c:'#555570'};font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s">${wt}</button>`;}).join('')}
   </div>
 
-  <label class="form-label">담당 팀</label>
-  <div style="display:flex;gap:6px;margin-bottom:13px">
-    ${TEAM_ROLES.map(r=>{const colors={기획:'#c8a84b',디자인:'#e96d9b',퍼블:'#00c2d4',개발:'#3d9be9'};const c=colors[r];return`<button onclick="fd.teamRole='${r}';render()" style="flex:1;padding:8px;border-radius:9px;border:1px solid ${(f.teamRole||'')=== r?c:'#ffffff10'};background:${(f.teamRole||'')=== r?c+'18':'#ffffff04'};color:${(f.teamRole||'')=== r?c:'#555570'};font-size:12px;font-weight:600;cursor:pointer;font-family:inherit">${r}</button>`;}).join('')}
-  </div>
-
   <label class="form-label">지라 코드</label>
   <input class="form-input" id="fCode" placeholder="LGS-123" value="${esc(f.code||'')}">
 
@@ -622,11 +667,29 @@ function renderForm() {
   <label class="form-label">Summary</label>
   <input class="form-input" id="fSummary" placeholder="업무 내용" value="${esc(f.summary||'')}">
 
-  <label class="form-label">Assignee</label>
-  <select class="form-input" id="fAss" onchange="syncFd();render()">
-    <option value="">선택</option>
-    ${(f.teamRole && TEAM_MEMBERS[f.teamRole] ? TEAM_MEMBERS[f.teamRole] : ALL_MEMBERS).map(m=>`<option value="${esc(m)}"${f.assignee===m?' selected':''}>${esc(m)}${m===ME?' (나)':m===TEAM?' (책임님)':''}</option>`).join('')}
-  </select>
+  <label class="form-label">Assignee <span style="color:#444460;font-weight:400;text-transform:none;font-size:10px">기획 담당 1명</span></label>
+  <div style="display:flex;gap:8px;margin-bottom:13px">
+    ${[ME, TEAM].map(m=>`<button onclick="fd.assignee='${m}';render()" style="flex:1;padding:10px;border-radius:9px;border:1px solid ${(f.assignee||ME)===m?'#c8a84b':'#ffffff10'};background:${(f.assignee||ME)===m?'#c8a84b18':'#ffffff04'};color:${(f.assignee||ME)===m?'#c8a84b':'#555570'};font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s">${m}${m===ME?' (나)':' (책임님)'}</button>`).join('')}
+  </div>
+
+  <label class="form-label">작업자 <span style="color:#444460;font-weight:400;text-transform:none;font-size:10px">복수 선택 가능</span></label>
+  <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:13px">
+    ${TEAM_ROLES.map(role=>{
+      const roleColors={기획:'#c8a84b',디자인:'#e96d9b',퍼블:'#00c2d4',개발:'#3d9be9'};
+      const rc=roleColors[role];
+      const workers=f.workers||[];
+      return `<div style="background:#ffffff04;border:1px solid #ffffff08;border-radius:10px;padding:10px 12px">
+        <div style="font-size:10px;font-weight:700;color:${rc};letter-spacing:1px;margin-bottom:8px">${role}팀</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          ${TEAM_MEMBERS[role].map(m=>{
+            const sel=workers.includes(m);
+            return`<button onclick="toggleWorker('${m}')" style="padding:6px 12px;border-radius:99px;border:1px solid ${sel?rc:'#ffffff12'};background:${sel?rc+'20':'#ffffff05'};color:${sel?rc:'#555570'};font-size:11px;font-weight:${sel?700:400};cursor:pointer;font-family:inherit;transition:all .2s">${m}${sel?' ✓':''}</button>`;
+          }).join('')}
+        </div>
+      </div>`;
+    }).join('')}
+  </div>
+  ${(f.workers||[]).length?`<div style="font-size:11px;color:#555570;background:#ffffff05;border-radius:8px;padding:8px 12px;margin-bottom:13px">선택된 작업자: <span style="color:#e4e4f0;font-weight:600">${(f.workers||[]).join(', ')}</span></div>`:''}
 
   <div class="form-row">
     <div>
@@ -642,13 +705,7 @@ function renderForm() {
   <label class="form-label">마감일 <span style="color:#444460;text-transform:none;font-weight:400;font-size:10px">(비우면 자동 산정)</span></label>
   <input type="date" class="form-input" id="fDue" value="${f.dueDate||''}">
 
-  ${est?`<div class="hint-box">📊 <strong>${esc(f.assignee)}</strong>의 <strong>${f.type}</strong> 평균 <strong>${est}일</strong> → 예상 마감 <strong>${estDate?fmt(estDate):'-'}</strong></div>`:''}
-
-  <label class="form-label">카테고리</label>
-  <select class="form-input" id="fCat">
-    <option value="">선택 안함</option>
-    ${['기획','디자인','퍼블리싱','개발','QA','기타'].map(c=>`<option${(f.category||'')=== c?' selected':''}>${c}</option>`).join('')}
-  </select>
+  ${est?`<div class="hint-box">📊 <strong>${esc(f.assignee||ME)}</strong>의 <strong>${f.type}</strong> 평균 <strong>${est}일</strong> → 예상 마감 <strong>${estDate?fmt(estDate):'-'}</strong></div>`:''}
 
   <label class="form-label">디자인 업무</label>
   <div class="type-btns">
@@ -673,20 +730,208 @@ function renderForm() {
 
 // ── DESIGN ───────────────────────────────────────────
 function renderDesign() {
-  const ref=DESIGN_REFS[designType]||DESIGN_REFS.banner;
-  const types=[{key:'banner',icon:'🖼',label:'배너'},{key:'keyvisual',icon:'✨',label:'Key Visual'},{key:'detail',icon:'📄',label:'상세페이지'}];
-  return `
-  <div class="design-type-grid">${types.map(t=>`<div class="design-type-btn${designType===t.key?' active':''}" onclick="designType='${t.key}';render()"><div class="dt-icon">${t.icon}</div><div class="dt-label">${t.label}</div></div>`).join('')}</div>
-  <div style="margin-bottom:18px">
-    <div class="section-label" style="color:#7c6fcd;margin-bottom:10px">📌 레퍼런스 방향</div>
-    ${ref.refs.map(r=>`<div class="ref-card"><div style="font-size:13px;font-weight:600;margin-bottom:4px">${r.title}</div><div style="font-size:11px;color:#555570;line-height:1.6;margin-bottom:8px">${r.desc}</div><div style="display:flex;gap:5px;flex-wrap:wrap">${r.tags.map(tg=>`<span class="tag tag-round" style="background:#7c6fcd18;color:#7c6fcd">${tg}</span>`).join('')}</div></div>`).join('')}
-  </div>
-  <div class="card">
-    <div class="section-label" style="color:#c8a84b;margin-bottom:10px">✅ 디렉팅 체크리스트</div>
-    <div class="hint-box">💡 ${ref.tips}</div>
-    <ul class="checklist" style="padding:0">${ref.checks.map((item,i)=>{const k=`${designType}-${i}`;return`<li id="dck-${k}" onclick="toggleDesign('${k}')" style="display:flex;align-items:center;gap:8px;color:${designChecks[k]?'#3ecf8e':'#888'}"><span style="color:${designChecks[k]?'#3ecf8e':'#333350'}">${designChecks[k]?'●':'○'}</span>${item}</li>`;}).join('')}</ul>
+  const steps=['① 키워드','② 무드 & 컬러','③ 브리프 완성'];
+  const stepBar=`<div style="display:flex;gap:0;margin-bottom:22px;background:#0f0f1c;border:1px solid var(--border);border-radius:12px;overflow:hidden">
+    ${steps.map((s,i)=>`<div onclick="designStep=${i+1};render()" style="flex:1;padding:10px 8px;text-align:center;font-size:11px;font-weight:${designStep===i+1?700:400};cursor:pointer;background:${designStep===i+1?'#7c6fcd18':'transparent'};color:${designStep===i+1?'#7c6fcd':'#444460'};border-right:${i<2?'1px solid var(--border)':'none'};transition:all .2s">${s}</div>`).join('')}
   </div>`;
+
+  if(designStep===1) return stepBar+renderDesignStep1();
+  if(designStep===2) return stepBar+renderDesignStep2();
+  return stepBar+renderDesignStep3();
 }
+
+function renderDesignStep1() {
+  const b=designBrief;
+  const rec=getDesignRecs(b.keywords);
+  const kwInput=`<div class="card" style="margin-bottom:14px">
+    <div class="section-label" style="color:#7c6fcd;margin-bottom:12px">🔍 이벤트/캠페인 키워드 입력</div>
+    <div style="font-size:11px;color:#555570;margin-bottom:10px">키워드를 입력하면 어울리는 디자인 방향을 자동으로 추천해드려요</div>
+    <div style="display:flex;gap:8px;margin-bottom:12px">
+      <input class="form-input" id="kwInput" style="margin-bottom:0;flex:1" placeholder="예: 여름, 에어컨, 프리미엄, 할인..." value="${b.keywords.join(', ')}">
+      <button onclick="applyKeywords()" class="btn gold" style="border-radius:9px;padding:0 16px;flex-shrink:0">추천</button>
+    </div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap">
+      ${['봄','여름','가을','겨울','신제품','할인/혜택','프리미엄','라이프스타일','키즈','신규출시'].map(k=>`<button onclick="addKeyword('${k}')" style="padding:5px 12px;border-radius:99px;border:1px solid ${b.keywords.includes(k)?'#7c6fcd':'#ffffff12'};background:${b.keywords.includes(k)?'#7c6fcd18':'#ffffff05'};color:${b.keywords.includes(k)?'#7c6fcd':'#555570'};font-size:11px;cursor:pointer;font-family:inherit">${k}</button>`).join('')}
+    </div>
+  </div>`;
+
+  const recHtml=rec?`<div style="background:#7c6fcd0a;border:1px solid #7c6fcd20;border-radius:12px;padding:16px;margin-bottom:14px">
+    <div style="font-size:12px;font-weight:700;color:#7c6fcd;margin-bottom:10px">✨ 추천 방향</div>
+    <div style="font-size:12px;color:#aaa;margin-bottom:10px;line-height:1.7;background:#ffffff05;border-radius:8px;padding:10px">💡 ${rec.tip}</div>
+    ${rec.refs.map(r=>`<div style="display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-bottom:1px solid #ffffff06;font-size:12px;color:#888"><span style="color:#7c6fcd;flex-shrink:0">▸</span>${r}</div>`).join('')}
+    <div style="margin-top:12px;display:flex;gap:8px">
+      <button onclick="designBrief.moods=['${rec.mood}'];designBrief.colors=['${rec.color}'];designStep=2;render()" class="btn gold" style="border-radius:9px;flex:1">이 방향으로 진행 →</button>
+    </div>
+  </div>`:'';
+
+  const outputType=`<div class="card" style="margin-bottom:14px">
+    <div class="section-label" style="color:#7c6fcd;margin-bottom:12px">📐 산출물 유형</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+      ${[{k:'banner',i:'🖼',l:'배너'},{k:'keyvisual',i:'✨',l:'Key Visual'},{k:'detail',i:'📄',l:'상세페이지'}].map(t=>`<div onclick="designBrief.outputType='${t.k}';render()" style="background:${b.outputType===t.k?'#7c6fcd18':' var(--bg)'};border:1px solid ${b.outputType===t.k?'#7c6fcd':'var(--border)'};border-radius:10px;padding:14px;text-align:center;cursor:pointer"><div style="font-size:20px;margin-bottom:5px">${t.i}</div><div style="font-size:12px;font-weight:600;color:${b.outputType===t.k?'#7c6fcd':'#888'}">${t.l}</div></div>`).join('')}
+    </div>
+  </div>`;
+
+  return kwInput+recHtml+outputType+`<button onclick="designStep=2;render()" class="btn gold" style="width:100%;border-radius:11px">다음: 무드 & 컬러 선택 →</button>`;
+}
+
+function renderDesignStep2() {
+  const b=designBrief;
+  const moodHtml=`<div class="card" style="margin-bottom:14px">
+    <div class="section-label" style="color:#7c6fcd;margin-bottom:12px">🎭 무드 선택 <span style="color:#444460;font-size:9px;font-weight:400;text-transform:none">(복수 선택 가능)</span></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+      ${MOODS.map(m=>{const sel=b.moods.includes(m.key);return`<div onclick="toggleArr('moods','${m.key}')" style="background:${sel?'#7c6fcd18':'var(--bg)'};border:1px solid ${sel?'#7c6fcd':'var(--border)'};border-radius:10px;padding:12px;text-align:center;cursor:pointer;transition:all .2s">
+        <div style="font-size:18px;margin-bottom:4px">${m.icon}</div>
+        <div style="font-size:11px;font-weight:700;color:${sel?'#7c6fcd':'#888'}">${m.label}</div>
+        <div style="font-size:10px;color:#444460;margin-top:2px">${m.desc}</div>
+      </div>`;}).join('')}
+    </div>
+  </div>`;
+
+  const colorHtml=`<div class="card" style="margin-bottom:14px">
+    <div class="section-label" style="color:#7c6fcd;margin-bottom:12px">🎨 컬러 방향 <span style="color:#444460;font-size:9px;font-weight:400;text-transform:none">(복수 선택 가능)</span></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      ${COLOR_DIRS.map(c=>{const sel=b.colors.includes(c.key);return`<div onclick="toggleArr('colors','${c.key}')" style="background:${sel?'#ffffff08':'var(--bg)'};border:2px solid ${sel?'#ffffff30':'var(--border)'};border-radius:10px;padding:10px 12px;cursor:pointer;display:flex;align-items:center;gap:10px;transition:all .2s">
+        <div style="display:flex;gap:3px">${c.colors.map(cl=>`<div style="width:16px;height:16px;border-radius:3px;background:${cl}"></div>`).join('')}</div>
+        <span style="font-size:12px;font-weight:600;color:${sel?'#e4e4f0':'#666688'}">${c.label}</span>
+        ${sel?'<span style="margin-left:auto;color:#3ecf8e;font-size:11px">✓</span>':''}
+      </div>`;}).join('')}
+    </div>
+  </div>`;
+
+  const toneHtml=`<div class="card" style="margin-bottom:14px">
+    <div class="section-label" style="color:#7c6fcd;margin-bottom:12px">💬 톤앤매너 <span style="color:#444460;font-size:9px;font-weight:400;text-transform:none">(복수 선택 가능)</span></div>
+    <div style="display:flex;gap:7px;flex-wrap:wrap">
+      ${TONES.map(t=>{const sel=b.tones.includes(t);return`<button onclick="toggleArr('tones','${t}')" style="padding:7px 13px;border-radius:99px;border:1px solid ${sel?'#c8a84b':'#ffffff12'};background:${sel?'#c8a84b18':'#ffffff05'};color:${sel?'#c8a84b':'#555570'};font-size:11px;cursor:pointer;font-family:inherit">${t}</button>`;}).join('')}
+    </div>
+  </div>`;
+
+  return moodHtml+colorHtml+toneHtml+`<div style="display:flex;gap:8px"><button onclick="designStep=1;render()" class="btn" style="border-radius:11px">← 이전</button><button onclick="designStep=3;render()" class="btn gold" style="flex:2;border-radius:11px">다음: 브리프 작성 →</button></div>`;
+}
+
+function renderDesignStep3() {
+  const b=designBrief;
+  const moodLabels=b.moods.map(k=>MOODS.find(m=>m.key===k)?.label||k).join(', ')||'미선택';
+  const colorLabels=b.colors.map(k=>COLOR_DIRS.find(c=>c.key===k)?.label||k).join(', ')||'미선택';
+  const typeMap={banner:'배너',keyvisual:'Key Visual',detail:'상세페이지'};
+
+  const formHtml=`<div class="card" style="margin-bottom:14px">
+    <div class="section-label" style="color:#c8a84b;margin-bottom:14px">📋 브리프 작성</div>
+
+    <label class="form-label">캠페인명</label>
+    <input class="form-input" id="bCampaign" placeholder="예: 2025 여름 에어컨 기획전" value="${esc(b.campaignName)}">
+
+    <label class="form-label">타겟</label>
+    <input class="form-input" id="bTarget" placeholder="예: 30-40대 주부, 신혼부부" value="${esc(b.target)}">
+
+    <label class="form-label">마감일</label>
+    <input type="date" class="form-input" id="bDeadline" value="${b.deadline}">
+
+    <label class="form-label">담당 디자이너</label>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:13px">
+      ${TEAM_MEMBERS['디자인'].map(m=>`<button onclick="toggleArr('assignees','${m}')" style="padding:6px 12px;border-radius:99px;border:1px solid ${b.assignees.includes(m)?'#e96d9b':'#ffffff12'};background:${b.assignees.includes(m)?'#e96d9b18':'#ffffff05'};color:${b.assignees.includes(m)?'#e96d9b':'#555570'};font-size:11px;cursor:pointer;font-family:inherit">${m}</button>`).join('')}
+    </div>
+
+    <label class="form-label">추가 요청사항</label>
+    <textarea class="form-input" id="bRequest" rows="3" placeholder="디자이너에게 전달하고 싶은 추가 내용...">${esc(b.request)}</textarea>
+
+    <div style="background:#ffffff05;border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:14px;font-size:11px;color:#555570;line-height:1.7">
+      <div style="color:#888;margin-bottom:5px;font-weight:600">선택된 방향 요약</div>
+      <div>산출물: <span style="color:#7c6fcd">${typeMap[b.outputType]||b.outputType}</span></div>
+      <div>키워드: <span style="color:#3d9be9">${b.keywords.join(', ')||'없음'}</span></div>
+      <div>무드: <span style="color:#e96d9b">${moodLabels}</span></div>
+      <div>컬러: <span style="color:#c8a84b">${colorLabels}</span></div>
+      <div>톤앤매너: <span style="color:#3ecf8e">${b.tones.join(', ')||'없음'}</span></div>
+    </div>
+
+    <button onclick="syncBriefInputs();generateBrief()" class="btn gold" style="width:100%;border-radius:11px;margin-bottom:8px">✍️ 브리프 생성</button>
+  </div>`;
+
+  const histHtml=S.designHistory&&S.designHistory.length?`
+    <div style="margin-top:20px">
+      <div class="section-label" style="color:#333350;margin-bottom:8px">📁 브리프 히스토리 (${S.designHistory.length}건)</div>
+      ${S.designHistory.slice().reverse().slice(0,5).map((h,i)=>`<div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:8px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
+          <span style="font-size:12px;font-weight:600;color:#e4e4f0">${esc(h.campaignName||'(제목없음)')}</span>
+          <span style="font-size:10px;color:#444460">${h.date}</span>
+        </div>
+        <div style="font-size:11px;color:#555570;display:flex;gap:8px;flex-wrap:wrap">
+          <span style="color:#7c6fcd">${h.outputType}</span>
+          <span>${h.moods}</span>
+          <span>${h.colors}</span>
+        </div>
+        <button onclick="copyBrief(${i})" style="margin-top:8px;background:#ffffff08;border:1px solid var(--border);border-radius:6px;color:#888;padding:4px 10px;font-size:10px;cursor:pointer;font-family:inherit">📋 복사</button>
+      </div>`).join('')}
+    </div>`:'';
+
+  const briefPreview=S.lastBrief?`<div id="briefOut" style="background:#07070e;border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:14px;font-family:'Noto Sans KR',monospace;font-size:12px;line-height:1.8;color:#aaa;white-space:pre-wrap">${esc(S.lastBrief)}</div>
+    <div style="display:flex;gap:8px;margin-bottom:14px">
+      <button onclick="copyLastBrief()" class="btn blue" style="flex:1;border-radius:9px">📋 클립보드 복사</button>
+      <button onclick="S.lastBrief=null;save();render()" style="background:transparent;border:1px solid var(--border);border-radius:9px;color:#444460;padding:10px 14px;cursor:pointer;font-family:inherit;font-size:12px">닫기</button>
+    </div>`:'';
+
+  return formHtml+briefPreview+`<button onclick="designStep=2;render()" class="btn" style="width:100%;border-radius:11px;margin-bottom:14px">← 이전으로</button>`+histHtml;
+}
+
+function toggleArr(field, val) {
+  const arr=designBrief[field];
+  const idx=arr.indexOf(val);
+  if(idx>-1) arr.splice(idx,1); else arr.push(val);
+  render();
+}
+
+function addKeyword(k) {
+  if(!designBrief.keywords.includes(k)) designBrief.keywords.push(k);
+  else designBrief.keywords=designBrief.keywords.filter(x=>x!==k);
+  render();
+}
+
+function applyKeywords() {
+  const el=document.getElementById('kwInput');
+  if(!el) return;
+  designBrief.keywords=el.value.split(/[,\s]+/).map(k=>k.trim()).filter(Boolean);
+  const rec=getDesignRecs(designBrief.keywords);
+  if(rec){designBrief.moods=[rec.mood];designBrief.colors=[rec.color];}
+  render();
+}
+
+function syncBriefInputs() {
+  const m={bCampaign:'campaignName',bTarget:'target',bDeadline:'deadline',bRequest:'request'};
+  Object.entries(m).forEach(([id,key])=>{const el=document.getElementById(id);if(el)designBrief[key]=el.value;});
+}
+
+function generateBrief() {
+  syncBriefInputs();
+  const text=genBriefText(designBrief);
+  S.lastBrief=text;
+  if(!S.designHistory) S.designHistory=[];
+  const typeMap={banner:'배너',keyvisual:'Key Visual',detail:'상세페이지'};
+  S.designHistory.push({
+    date:new Date().toLocaleDateString('ko-KR'),
+    campaignName:designBrief.campaignName,
+    outputType:typeMap[designBrief.outputType]||designBrief.outputType,
+    moods:designBrief.moods.map(k=>MOODS.find(m=>m.key===k)?.label||k).join(', '),
+    colors:designBrief.colors.map(k=>COLOR_DIRS.find(c=>c.key===k)?.label||k).join(', '),
+    text
+  });
+  if(S.designHistory.length>20) S.designHistory=S.designHistory.slice(-20);
+  save(); render();
+}
+
+function copyLastBrief() {
+  if(!S.lastBrief) return;
+  navigator.clipboard.writeText(S.lastBrief).then(()=>alert('클립보드에 복사됐어요! 메신저/메일에 바로 붙여넣기 하세요 😊')).catch(()=>{
+    const el=document.getElementById('briefOut');
+    if(el){const r=document.createRange();r.selectNode(el);window.getSelection().removeAllRanges();window.getSelection().addRange(r);document.execCommand('copy');alert('복사됐어요!');}
+  });
+}
+
+function copyBrief(revIdx) {
+  if(!S.designHistory) return;
+  const h=S.designHistory.slice().reverse()[revIdx];
+  if(!h) return;
+  navigator.clipboard.writeText(h.text).then(()=>alert('복사됐어요!')).catch(()=>{});
+}
+
 function toggleDesign(k){designChecks[k]=!designChecks[k];const el=document.getElementById(`dck-${k}`);if(el){el.style.color=designChecks[k]?'#3ecf8e':'#888';el.querySelector('span').textContent=designChecks[k]?'●':'○';el.querySelector('span').style.color=designChecks[k]?'#3ecf8e':'#333350';}}
 
 // ── IMPACT ───────────────────────────────────────────
@@ -798,13 +1043,19 @@ function renderLearn() {
 // ═══════════════════════════════════════════════════
 // ACTIONS
 // ═══════════════════════════════════════════════════
+function toggleWorker(name){
+  if(!fd.workers) fd.workers=[];
+  const idx=fd.workers.indexOf(name);
+  if(idx>-1) fd.workers.splice(idx,1); else fd.workers.push(name);
+  render();
+}
 function go(v){if(v!=='add')editId=null;if(v==='add'&&!editId)resetFd();view=v;render();}
-function resetFd(){fd={type:'Task',status:'To Do',startDate:today(),code:'',summary:'',assignee:ME,dueDate:'',memo:'',isDesign:false,category:''};editId=null;}
+function resetFd(){fd={type:'Task',status:'To Do',startDate:today(),code:'',summary:'',assignee:ME,dueDate:'',memo:'',isDesign:false,workType:'',workers:[]};editId=null;}
 function cancelForm(){editId=null;resetFd();go('today');}
 function setType(t){syncFd();fd.type=t;fd.dueDate='';render();}
 
 function syncFd(){
-  const m={fCode:'code',fSummary:'summary',fSts:'status',fStart:'startDate',fDue:'dueDate',fMemo:'memo',fAss:'assignee',fCat:'category'};
+  const m={fCode:'code',fSummary:'summary',fSts:'status',fStart:'startDate',fDue:'dueDate',fMemo:'memo'};
   Object.entries(m).forEach(([id,key])=>{const el=document.getElementById(id);if(el)fd[key]=el.value;});
 }
 
@@ -818,8 +1069,9 @@ function submitForm(){
     assignee:fd.assignee||ME,status:fd.status||'To Do',
     startDate:fd.startDate||today(),dueDate:fd.dueDate||'',
     endDate:fd.status==='Done'?(fd.dueDate||today()):'',
-    memo:fd.memo||'',isDesign:!!fd.isDesign,category:fd.category||'',
-    workType:fd.workType||'',teamRole:fd.teamRole||'',
+    memo:fd.memo||'',isDesign:!!fd.isDesign,
+    workType:fd.workType||'',
+    workers:fd.workers||[],
     originalAssignee:fd.originalAssignee||null,
     transferDate:fd.transferDate||null,
     createdAt:editId?S.tasks.find(t=>t.id===editId)?.createdAt:today()

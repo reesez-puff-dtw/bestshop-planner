@@ -375,20 +375,6 @@ function taskCard(t){
   </div></div>`;
 }
 
-// ═══════════════════════════ RENDER ═══════════════════════════
-function render(){
-  updH();
-  document.getElementById('nav').innerHTML=VIEWS.map((v,i)=>`<button class="nb${V===v?' on':''}" onclick="go('${v}')">${VLABEL[i]}</button>`).join('');
-  const map={today:rToday,week:rWeek,deploy:rDeploy,board:rBoard,add:rForm,design:rDesign,impact:rImpact,learn:rLearn};
-  document.getElementById('app').innerHTML=(map[V]||rToday)();
-}
-function updH(){
-  document.getElementById('hDate').textContent=new Date().toLocaleDateString('ko-KR',{month:'long',day:'numeric',weekday:'short'});
-  const nd=nextDeploy(),t=td();
-  const cnt=S.tasks.filter(x=>x.assignee===ME&&x.status!=='Done'&&x.startDate<=t&&(!x.dueDate||x.dueDate>=t)).length;
-  const tr=getTrans().length;
-  document.getElementById('hMeta').innerHTML=`내 업무 ${cnt}건 · 다음배포 ${fmt(nd)}${tr?` · ⚠ 이관 ${tr}건`:''}`;
-}
 
 // ─── TODAY ───────────────────────────────────────────────────
 function rToday(){
@@ -716,7 +702,7 @@ function rImpact(){
     <div style="display:flex;gap:5px;flex-wrap:wrap">${(h.hits||[]).map(x=>`<span class="tagr" style="background:${x.risk==='high'?'#f164640e':x.risk==='medium'?'#f59e0b0e':'#3ecf8e0e'};color:${x.risk==='high'?'#f16464':x.risk==='medium'?'#f59e0b':'#3ecf8e'}">${x.area}</span>`).join('')}</div>
   </div>`).join('');
   const res=IR.length?IR.map(r=>`<div class="ir" style="background:${r.risk==='high'?'#f164640e':r.risk==='medium'?'#f59e0b0e':'#3ecf8e0e'};border:1px solid ${r.risk==='high'?'#f164641e':r.risk==='medium'?'#f59e0b1e':'#3ecf8e1e'}">
-    <div style="font-size:13px;font-weight:700;color:${r.risk==='high'?'#f16464':r.risk==='medium'?'#f59e0b':'#3ecf8e'};margin-bottom:6px">${r.risk==='high'?'🔴 높은':'r.risk==='medium'?'🟡 중간':'🟢 낮은'} 영향 · ${r.area}</div>
+    <div style="font-size:13px;font-weight:700;color:${r.risk==='high'?'#f16464':r.risk==='medium'?'#f59e0b':'#3ecf8e'};margin-bottom:6px">${r.risk==='high'?'🔴 높은':r.risk==='medium'?'🟡 중간':'🟢 낮은'} 영향 · ${r.area}</div>
     <div style="font-size:12px;color:#888;line-height:1.5">${r.desc}</div>
     <div style="font-size:10px;color:#444460;margin-top:5px">감지 키워드: ${(r.matched||[]).join(', ')}</div>
   </div>`).join(''):(II?`<div class="hintbox">✅ 영향도가 감지되지 않았어요. 더 구체적으로 입력해주세요.</div>`:'');
@@ -816,7 +802,7 @@ function submitF(){
 }
 function editTask(id){const t=S.tasks.find(t=>t.id===id);if(!t)return;EID=id;FD={...t,workers:t.workers||[],teamSchedules:t.teamSchedules||{}};V='add';render();}
 function delTask(id){if(!confirm('삭제할까요?'))return;S.tasks=S.tasks.filter(t=>t.id!==id);save();render();}
-function setStatus(id,status){
+function setSts(id,status){
   S.tasks=S.tasks.map(t=>{
     if(t.id!==id)return t;
     const u={...t,status};
@@ -825,7 +811,6 @@ function setStatus(id,status){
   });
   save();render();
 }
-function getTrans(){return S.tasks.filter(t=>t.originalAssignee===TEAM&&t.assignee===ME&&!t.transferConfirmed);}
 function confirmTrans(id){S.tasks=S.tasks.map(t=>t.id===id?{...t,transferConfirmed:true}:t);save();render();}
 
 // Design actions

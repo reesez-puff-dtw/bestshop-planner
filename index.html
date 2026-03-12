@@ -200,6 +200,13 @@ const TC = {Task:'#3d9be9','Sub-task':'#7c6fcd'};
 const WORK_TYPES = ['신규 디자인','디자인 수정','UI 수정','퍼블 수정','개발 수정','CMS 등록','기타'];
 const WORK_TYPE_COLORS = {'신규 디자인':'#7c6fcd','디자인 수정':'#e96d9b','UI 수정':'#3d9be9','퍼블 수정':'#00c2d4','개발 수정':'#f59e0b','CMS 등록':'#3ecf8e','기타':'#666688'};
 const TEAM_ROLES = ['기획','디자인','퍼블','개발'];
+const TEAM_MEMBERS = {
+  '기획': ['이지아','정희라'],
+  '디자인': ['김소진','양소라','신혜연'],
+  '퍼블': ['박혜미','김영서','이은진'],
+  '개발': ['이효근','김알찬']
+};
+const ALL_MEMBERS = Object.values(TEAM_MEMBERS).flat();
 // 매달 말일 정기 업무
 const MONTHLY_TASKS = ['One-Drive 업데이트','홈플러스 휴무일 등록','백화점 휴무일 등록'];
 const STS = ['To Do','In Progress','Done'];
@@ -226,10 +233,7 @@ let impactResult = [];
 // ═══════════════════════════════════════════════════
 function load() {
   try { const r=localStorage.getItem(SK); if(r) S=JSON.parse(r); } catch{}
-  // ensure default members always present
-  if(!S.members) S.members=[ME,TEAM];
-  if(!S.members.includes(ME)) S.members.unshift(ME);
-  if(!S.members.includes(TEAM)) S.members.splice(1,0,TEAM);
+  S.members = ALL_MEMBERS;
   if(!S.impactHistory) S.impactHistory=[];
 }
 function save() { localStorage.setItem(SK, JSON.stringify(S)); }
@@ -592,8 +596,6 @@ function renderForm() {
   const estDate=est&&f.startDate?addD(f.startDate,Math.round(est)):null;
   const isTransferred=f.originalAssignee===TEAM&&f.assignee===ME;
 
-  const memberOpts=[ME,TEAM,...S.members.filter(m=>m!==ME&&m!==TEAM)].map(m=>`<option value="${esc(m)}"${f.assignee===m?' selected':''}>${esc(m)}</option>`).join('');
-
   return `<div class="card">
   <div style="font-size:15px;font-weight:700;margin-bottom:18px">${isEdit?'업무 수정':'새 업무 등록'}</div>
 
@@ -622,7 +624,8 @@ function renderForm() {
 
   <label class="form-label">Assignee</label>
   <select class="form-input" id="fAss" onchange="syncFd();render()">
-    <option value="">선택</option>${memberOpts}
+    <option value="">선택</option>
+    ${(f.teamRole && TEAM_MEMBERS[f.teamRole] ? TEAM_MEMBERS[f.teamRole] : ALL_MEMBERS).map(m=>`<option value="${esc(m)}"${f.assignee===m?' selected':''}>${esc(m)}${m===ME?' (나)':m===TEAM?' (책임님)':''}</option>`).join('')}
   </select>
 
   <div class="form-row">
@@ -734,11 +737,42 @@ function renderLearn() {
   const avgT=aT.length?(aT.reduce((s,t)=>s+diffD(t.startDate,t.endDate),0)/aT.length).toFixed(1):'-';
   const avgS=aS.length?(aS.reduce((s,t)=>s+diffD(t.startDate,t.endDate),0)/aS.length).toFixed(1):'-';
 
-  const rows=[];
-  [ME,TEAM,...S.members.filter(m=>m!==ME&&m!==TEAM)].forEach(m=>TYPES.forEach(type=>{
-    const d=est[m]?.[type];
-    if(d) rows.push(`<tr><td style="padding:8px 10px">${esc(m)}${m===ME?'<span style="font-size:9px;color:#c8a84b;margin-left:4px">(나)</span>':m===TEAM?`<span style="font-size:9px;color:#e96d9b;margin-left:4px">(책임님)</span>`:''}</td><td style="padding:8px 10px"><span class="tag" style="background:${TC[type]}18;color:${TC[type]}">${type}</span></td><td style="padding:8px 10px"><span style="color:#c8a84b;font-weight:700">${d.avg}일</span></td><td style="padding:8px 10px"><span style="color:#3d9be9;font-size:11px">${d.count}건</span></td><td style="padding:8px 10px;color:#444460;font-size:11px">${d.samples.join(', ')}일</td></tr>`);
-  }));
+  // 팀별 그룹으로 rows 구성
+  const teamColors={기획:'#c8a84b',디자인:'#e96d9b',퍼블:'#00c2d4',개발:'#3d9be9'};
+  let tableRows='';
+  TEAM_ROLES.forEach(role=>{
+    const members=TEAM_MEMBERS[role];
+    const tc2=teamColors[role];
+    members.forEach(m=>{
+      TYPES.forEach(type=>{
+        const d=est[m]?.[type];
+        if(d) tableRows+=`<tr>
+          <td style="padding:8px 10px">
+            <span style="font-size:9px;padding:1px 6px;border-radius:3px;background:${tc2}18;color:${tc2};font-weight:700;margin-right:5px">${role}</span>
+            ${esc(m)}${m===ME?'<span style="font-size:9px;color:#c8a84b;margin-left:4px">(나)</span>':m===TEAM?`<span style="font-size:9px;color:#e96d9b;margin-left:4px">(책임님)</span>`:''}
+          </td>
+          <td style="padding:8px 10px"><span class="tag" style="background:${TC[type]}18;color:${TC[type]}">${type}</span></td>
+          <td style="padding:8px 10px"><span style="color:#c8a84b;font-weight:700">${d.avg}일</span></td>
+          <td style="padding:8px 10px"><span style="color:#3d9be9;font-size:11px">${d.count}건</span></td>
+          <td style="padding:8px 10px;color:#444460;font-size:11px">${d.samples.join(', ')}일</td>
+        </tr>`;
+      });
+    });
+  });
+
+  // 팀 멤버 현황 카드
+  const teamCardHtml=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px">
+    ${TEAM_ROLES.map(role=>{
+      const tc2=teamColors[role];
+      return `<div style="background:var(--surface);border:1px solid ${tc2}20;border-radius:10px;padding:12px 14px">
+        <div style="font-size:10px;font-weight:700;color:${tc2};letter-spacing:1px;margin-bottom:8px">${role}팀</div>
+        ${TEAM_MEMBERS[role].map(m=>`<div style="font-size:12px;color:#aaa;padding:3px 0;display:flex;align-items:center;gap:5px">
+          <span style="width:5px;height:5px;border-radius:99px;background:${tc2};display:inline-block"></span>
+          ${esc(m)}${m===ME?'<span style="font-size:9px;color:#c8a84b">(나)</span>':m===TEAM?'<span style="font-size:9px;color:#e96d9b">(책임님)</span>':''}
+        </div>`).join('')}
+      </div>`;
+    }).join('')}
+  </div>`;
 
   return `
   <div class="stats-row">
@@ -747,12 +781,17 @@ function renderLearn() {
     <div class="stat-box"><h5>Sub-task 평균</h5><div class="sv">${avgS}</div><div style="font-size:10px;color:#444460;margin-top:2px">일</div></div>
     <div class="stat-box"><h5>이관 업무</h5><div class="sv" style="color:#e96d9b">${getTransferred().length}</div><div style="font-size:10px;color:#444460;margin-top:2px">건</div></div>
   </div>
+
+  <div class="section-label" style="color:#c8a84b;margin-bottom:10px">👥 팀 구성원</div>
+  ${teamCardHtml}
+
   <div class="section-label" style="color:#c8a84b;margin-bottom:10px">담당자별 학습 현황</div>
-  ${rows.length?`<div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:20px"><table class="learn-table"><thead><tr><th>담당자</th><th>유형</th><th>평균공수</th><th>샘플수</th><th>최근 소요일</th></tr></thead><tbody>${rows.join('')}</tbody></table></div>`
+  ${tableRows?`<div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:20px"><table class="learn-table"><thead><tr><th>담당자</th><th>유형</th><th>평균공수</th><th>샘플수</th><th>최근 소요일</th></tr></thead><tbody>${tableRows}</tbody></table></div>`
   :`<div class="empty"><div class="empty-icon">📊</div><div class="empty-text">학습 데이터 없음</div><div class="empty-sub">업무 완료 처리 시 자동으로 학습돼요</div></div>`}
+
   <div style="background:#c8a84b08;border:1px solid #c8a84b18;border-radius:12px;padding:16px">
     <div class="section-label" style="color:#c8a84b;margin-bottom:8px">📌 공수 학습 방법</div>
-    <div style="font-size:12px;color:#888;line-height:1.9">1. 업무 등록 시 <strong style="color:#e4e4f0">담당자 + 시작일</strong> 입력<br>2. 완료 시 <strong style="color:#e4e4f0">상태 → Done</strong> 변경 (완료일 자동 기록)<br>3. 데이터 누적 시 예상 공수 자동 정확화<br>4. 최근 3건에 60% 가중치 → 최신 속도 반영</div>
+    <div style="font-size:12px;color:#888;line-height:1.9">1. 업무 등록 시 <strong style="color:#e4e4f0">담당 팀 + Assignee + 시작일</strong> 입력<br>2. 완료 시 <strong style="color:#e4e4f0">상태 → Done</strong> 변경 (완료일 자동 기록)<br>3. 데이터 누적 시 담당자별 예상 공수 자동 정확화<br>4. 최근 3건에 60% 가중치 → 최신 속도 반영</div>
   </div>`;
 }
 

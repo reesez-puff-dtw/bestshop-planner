@@ -7,1126 +7,674 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#07070e;--surface:#0f0f1c;--surface2:#131322;--border:#ffffff0d;
-  --text:#e4e4f0;--muted:#666688;--dim:#3a3a55;
-  --gold:#c8a84b;--gold2:#e8c96b;
-  --blue:#3d9be9;--purple:#7c6fcd;--green:#3ecf8e;--red:#f16464;--orange:#f59e0b;
-  --cyan:#00c2d4;--pink:#e96d9b;
-}
-body{background:var(--bg);color:var(--text);font-family:'DM Sans','Noto Sans KR',sans-serif;min-height:100vh;font-size:14px}
-*::-webkit-scrollbar{width:4px;height:4px}
-*::-webkit-scrollbar-track{background:transparent}
-*::-webkit-scrollbar-thumb{background:#ffffff12;border-radius:99px}
-
-.header{background:linear-gradient(180deg,#0f0f1c,#07070e);border-bottom:1px solid var(--border);padding:18px 24px 0;position:sticky;top:0;z-index:50}
+:root{--bg:#07070e;--sf:#0f0f1c;--bd:#ffffff0d;--tx:#e4e4f0;--gold:#c8a84b;--gold2:#e8c96b;--blue:#3d9be9;--purple:#7c6fcd;--green:#3ecf8e;--red:#f16464;--orange:#f59e0b;--cyan:#00c2d4;--pink:#e96d9b}
+*::-webkit-scrollbar{width:4px;height:4px}*::-webkit-scrollbar-thumb{background:#ffffff12;border-radius:99px}
+body{background:var(--bg);color:var(--tx);font-family:'DM Sans','Noto Sans KR',sans-serif;min-height:100vh;font-size:14px}
+.header{background:linear-gradient(180deg,#0f0f1c,#07070e);border-bottom:1px solid var(--bd);padding:18px 24px 0;position:sticky;top:0;z-index:50}
 .header-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
 .logo-sub{font-size:9px;letter-spacing:4px;color:var(--gold);font-weight:700;margin-bottom:3px}
 .logo-main{font-size:19px;font-weight:700;letter-spacing:-.5px}
-.header-right{text-align:right;font-size:11px;color:#444460;line-height:1.8}
-.header-right strong{color:var(--gold)}
+.hr{text-align:right;font-size:11px;color:#444460;line-height:1.8}.hr strong{color:var(--gold)}
 .nav{display:flex;gap:1px;overflow-x:auto}
-.nav-btn{background:transparent;border:none;border-bottom:2px solid transparent;color:#444460;padding:8px 12px;font-size:12px;font-weight:400;cursor:pointer;font-family:inherit;transition:all .2s;border-radius:6px 6px 0 0;white-space:nowrap;flex-shrink:0}
-.nav-btn.active{background:#c8a84b10;border-bottom-color:var(--gold);color:var(--gold);font-weight:700}
-.content{padding:20px 24px;max-width:760px;margin:0 auto}
-
-/* Owner tabs */
-.owner-tabs{display:flex;gap:6px;margin-bottom:18px;background:#0f0f1c;border:1px solid var(--border);border-radius:12px;padding:6px}
-.owner-tab{flex:1;padding:9px 12px;border-radius:8px;border:none;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;text-align:center}
-.owner-tab.hira{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#07070e;box-shadow:0 3px 12px #c8a84b30}
-.owner-tab.jiha{background:#ffffff08;color:#555570}
-.owner-tab.jiha.active{background:#e96d9b18;color:var(--pink);border:1px solid #e96d9b30}
-.owner-tab.hira.inactive{background:#ffffff08;color:#555570;box-shadow:none}
-
-/* Alert banner */
-.alert-banner{background:#f1646408;border:1px solid #f164641e;border-radius:12px;padding:14px 16px;margin-bottom:16px;animation:fadeUp .3s ease}
-.alert-banner-title{font-size:12px;font-weight:700;color:var(--red);margin-bottom:8px;display:flex;align-items:center;gap:6px}
-.alert-item{background:#0f0f1c;border:1px solid #f164641e;border-radius:8px;padding:10px 12px;margin-bottom:6px;font-size:12px}
-.alert-item:last-child{margin-bottom:0}
-.alert-item-title{color:var(--text);font-weight:500;margin-bottom:3px}
-.alert-item-meta{color:#555570;font-size:11px;display:flex;gap:8px}
-
-/* Cards */
-.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px 20px;margin-bottom:12px}
-.section-label{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px}
-
-/* Task Card */
-.task-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:13px 16px;margin-bottom:8px;transition:all .2s;animation:fadeUp .2s ease;position:relative}
-.task-card:hover{border-color:#ffffff16;transform:translateY(-1px)}
-.task-card.done{opacity:.4}
-.task-card.jiha-card{border-left:3px solid var(--pink) !important;background:#e96d9b05}
-.task-card.transferred{border:1px solid var(--red) !important;background:#f164640a}
-.transferred-badge{position:absolute;top:10px;right:10px;font-size:9px;background:#f1646420;color:var(--red);padding:2px 8px;border-radius:99px;font-weight:700}
-.tc-inner{display:flex;gap:12px;align-items:flex-start}
-.tc-left{flex:1;min-width:0}
+.nb{background:transparent;border:none;border-bottom:2px solid transparent;color:#444460;padding:8px 11px;font-size:11px;font-weight:400;cursor:pointer;font-family:inherit;transition:all .2s;border-radius:6px 6px 0 0;white-space:nowrap;flex-shrink:0}
+.nb.on{background:#c8a84b10;border-bottom-color:var(--gold);color:var(--gold);font-weight:700}
+.ct{padding:20px 24px;max-width:760px;margin:0 auto}
+/* owner tabs */
+.otabs{display:flex;gap:6px;margin-bottom:18px;background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:6px}
+.otab{flex:1;padding:9px 12px;border-radius:8px;border:none;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;text-align:center}
+.me-on{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#07070e;box-shadow:0 3px 12px #c8a84b30}
+.me-off{background:#ffffff08;color:#555570;box-shadow:none}
+.ji-off{background:#ffffff08;color:#555570}
+.ji-on{background:#e96d9b18;color:var(--pink);border:1px solid #e96d9b30}
+/* card */
+.card{background:var(--sf);border:1px solid var(--bd);border-radius:14px;padding:18px 20px;margin-bottom:12px}
+.sl{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px}
+/* task card */
+.tc{background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:13px 16px;margin-bottom:8px;transition:all .2s;animation:fu .2s ease;position:relative}
+.tc:hover{border-color:#ffffff16;transform:translateY(-1px)}
+.tc.done{opacity:.4}.tc.jiha{border-left:3px solid var(--pink)!important;background:#e96d9b05}
+.tc.trans{border:1px solid var(--red)!important;background:#f164640a}
+.tc-in{display:flex;gap:12px;align-items:flex-start}
+.tc-l{flex:1;min-width:0}
 .tc-tags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:5px}
-.tag{font-size:10px;padding:2px 8px;border-radius:4px;font-weight:600;display:inline-block}
-.tag-round{border-radius:99px}
+.tag{font-size:10px;padding:2px 8px;border-radius:4px;font-weight:600}
+.tagr{font-size:10px;padding:2px 8px;border-radius:99px;font-weight:500}
 .tc-title{font-size:14px;font-weight:500;line-height:1.4;margin-bottom:4px}
-.task-card.done .tc-title{text-decoration:line-through;color:#3a3a55}
+.tc.done .tc-title{text-decoration:line-through;color:#3a3a55}
 .tc-meta{font-size:11px;color:#444460;display:flex;gap:10px;flex-wrap:wrap}
-.tc-memo{font-size:11px;color:#3a3a55;margin-top:5px}
-.tc-right{display:flex;flex-direction:column;gap:5px;align-items:flex-end;flex-shrink:0}
-.status-sel{background:#ffffff06;border:1px solid #ffffff10;border-radius:6px;color:#888;font-size:10px;padding:3px 6px;cursor:pointer;font-family:inherit;outline:none}
-.icon-btn{background:transparent;border:none;cursor:pointer;font-size:13px;padding:3px 4px;opacity:.5;transition:opacity .15s}
-.icon-btn:hover{opacity:1}
-
-/* Side panel */
-.side-panel{background:#0f0f1c;border:1px solid #e96d9b20;border-radius:12px;padding:14px 16px;margin-bottom:14px}
-.side-panel-title{font-size:11px;font-weight:700;color:var(--pink);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:6px}
-.side-task{padding:8px 10px;background:#e96d9b08;border:1px solid #e96d9b15;border-radius:8px;margin-bottom:6px;font-size:12px;cursor:pointer;transition:all .15s}
-.side-task:hover{background:#e96d9b12}
-.side-task:last-child{margin-bottom:0}
-.side-task-title{color:var(--text);margin-bottom:3px;font-weight:500}
-.side-task-meta{color:#555570;font-size:10px;display:flex;gap:8px}
-
-/* Forms */
-.form-label{font-size:10px;font-weight:700;color:#555570;letter-spacing:.8px;text-transform:uppercase;margin-bottom:5px;display:block}
-.form-input{width:100%;background:var(--bg);border:1px solid #ffffff10;border-radius:9px;color:var(--text);padding:10px 12px;font-size:13px;margin-bottom:13px;outline:none;font-family:inherit;transition:border-color .2s}
-.form-input:focus{border-color:var(--gold)}
-.form-input option{background:#0f0f1c;color:var(--text)}
-.form-row{display:flex;gap:10px}
-.form-row>div{flex:1}
-.type-btns{display:flex;gap:8px;margin-bottom:13px}
-.type-btn{flex:1;padding:9px;border-radius:9px;border:1px solid #ffffff10;background:#ffffff04;color:#555570;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s}
-.hint-box{font-size:11px;color:var(--gold);background:#c8a84b0e;border:1px solid #c8a84b1e;border-radius:8px;padding:9px 12px;margin-bottom:13px;line-height:1.6}
-.info-box{font-size:11px;color:var(--blue);background:#3d9be90e;border:1px solid #3d9be91e;border-radius:8px;padding:9px 12px;margin-bottom:13px;line-height:1.6}
-.warn-box{font-size:11px;color:var(--orange);background:#f59e0b0e;border:1px solid #f59e0b1e;border-radius:8px;padding:9px 12px;margin-bottom:13px;line-height:1.6}
-.danger-box{font-size:11px;color:var(--red);background:#f164640e;border:1px solid #f164641e;border-radius:8px;padding:9px 12px;margin-bottom:13px;line-height:1.6}
-.pink-box{font-size:11px;color:var(--pink);background:#e96d9b0e;border:1px solid #e96d9b1e;border-radius:8px;padding:9px 12px;margin-bottom:13px;line-height:1.6}
+.tbadge{position:absolute;top:10px;right:10px;font-size:9px;background:#f1646420;color:var(--red);padding:2px 8px;border-radius:99px;font-weight:700}
+/* side panel */
+.sp{background:var(--sf);border:1px solid #e96d9b20;border-radius:12px;padding:14px 16px;margin-bottom:14px}
+.sp-item{padding:8px 10px;background:#e96d9b08;border:1px solid #e96d9b15;border-radius:8px;margin-bottom:6px;font-size:12px;cursor:pointer;transition:all .15s}
+.sp-item:hover{background:#e96d9b14}
+/* boxes */
+.hintbox{font-size:11px;color:var(--gold);background:#c8a84b0e;border:1px solid #c8a84b1e;border-radius:8px;padding:9px 12px;margin-bottom:13px;line-height:1.6}
+.infobox{font-size:11px;color:var(--blue);background:#3d9be90e;border:1px solid #3d9be91e;border-radius:8px;padding:9px 12px;margin-bottom:13px;line-height:1.6}
+.warnbox{font-size:11px;color:var(--orange);background:#f59e0b0e;border:1px solid #f59e0b1e;border-radius:8px;padding:9px 12px;margin-bottom:13px;line-height:1.6}
+.dangerbox{font-size:11px;color:var(--red);background:#f164640e;border:1px solid #f164641e;border-radius:8px;padding:9px 12px;margin-bottom:13px;line-height:1.6}
+.pinkbox{font-size:11px;color:var(--pink);background:#e96d9b0e;border:1px solid #e96d9b1e;border-radius:8px;padding:9px 12px;margin-bottom:13px;line-height:1.6}
+.greenbox{font-size:11px;color:var(--green);background:#3ecf8e0e;border:1px solid #3ecf8e1e;border-radius:8px;padding:9px 12px;margin-bottom:13px;line-height:1.6}
+/* form */
+.fl{font-size:10px;font-weight:700;color:#555570;letter-spacing:.8px;text-transform:uppercase;margin-bottom:5px;display:block}
+.fi{width:100%;background:var(--bg);border:1px solid #ffffff10;border-radius:9px;color:var(--tx);padding:10px 12px;font-size:13px;margin-bottom:13px;outline:none;font-family:inherit;transition:border .2s}
+.fi:focus{border-color:var(--gold)}textarea.fi{resize:vertical}
+.fi option{background:var(--sf)}
+.tbtns{display:flex;gap:8px;margin-bottom:13px}
+.tbtn{flex:1;padding:9px;border-radius:9px;border:1px solid #ffffff10;background:#ffffff04;color:#555570;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s}
 .btn-row{display:flex;gap:10px;margin-top:6px}
 .btn{border-radius:11px;padding:11px 16px;font-size:13px;cursor:pointer;font-family:inherit;transition:all .2s;border:1px solid #ffffff10;background:#ffffff06;color:#666688}
 .btn.gold{background:linear-gradient(135deg,var(--gold),var(--gold2));border:none;color:#07070e;font-weight:700;box-shadow:0 4px 20px #c8a84b30}
 .btn.gold:hover{transform:translateY(-1px)}
 .btn.blue{background:#3d9be918;border-color:#3d9be930;color:var(--blue);font-weight:600}
-.btn.pink{background:#e96d9b18;border-color:#e96d9b30;color:var(--pink);font-weight:600}
-
-/* Deploy Cal */
-.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:20px}
-.cal-day{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px 8px;text-align:center;min-height:72px}
-.cal-day.today{border-color:var(--gold);background:#c8a84b08}
-.cal-day.deploy-day{border-color:var(--red);background:#f164640a}
-.cal-day.test-day{border-color:var(--orange);background:#f59e0b0a}
-.cal-day.past{opacity:.35}
-.cal-dn{font-size:10px;color:#444460;margin-bottom:3px}
-.cal-dd{font-size:15px;font-weight:700}
-.cal-day.today .cal-dd{color:var(--gold)}
-.cal-day.deploy-day .cal-dd{color:var(--red)}
-.cal-day.test-day .cal-dd{color:var(--orange)}
-.cal-badge{font-size:9px;padding:2px 5px;border-radius:4px;font-weight:700;margin-top:4px;display:block}
-
-/* Design */
-.design-type-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px}
-.design-type-btn{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center;cursor:pointer;transition:all .2s;font-family:inherit}
-.design-type-btn.active{border-color:var(--purple);background:#7c6fcd12}
-.dt-icon{font-size:22px;margin-bottom:6px}
-.dt-label{font-size:12px;font-weight:600;color:var(--text)}
-.design-type-btn.active .dt-label{color:var(--purple)}
-.ref-card{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:8px}
-.checklist li{padding:7px 0;border-bottom:1px solid #ffffff06;font-size:12px;color:#888;display:flex;align-items:flex-start;gap:8px;cursor:pointer;list-style:none}
-.checklist li:last-child{border-bottom:none}
-.checklist li.checked{color:var(--green)}
-
-/* Impact */
-.impact-result{border-radius:12px;padding:14px 16px;margin-bottom:8px}
-.impact-result.high{background:#f164640e;border:1px solid #f164641e}
-.impact-result.medium{background:#f59e0b0e;border:1px solid #f59e0b1e}
-.impact-result.low{background:#3ecf8e0e;border:1px solid #3ecf8e1e}
-
-/* Stats */
+/* deploy */
+.cl-item{padding:8px 0;border-bottom:1px solid #ffffff06;font-size:12px;display:flex;align-items:center;gap:8px;cursor:pointer}
+.cl-item:last-child{border-bottom:none}
+/* stats */
 .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:20px}
-.stat-box{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px}
+.stat-box{background:var(--sf);border:1px solid var(--bd);border-radius:10px;padding:12px 14px}
 .stat-box h5{font-size:9px;letter-spacing:1px;text-transform:uppercase;color:#444460;margin-bottom:6px}
 .stat-box .sv{font-size:22px;font-weight:700;color:var(--gold)}
-
-/* Learn table */
-.learn-table{width:100%;border-collapse:collapse;font-size:12px}
-.learn-table th{text-align:left;padding:7px 10px;font-size:9px;letter-spacing:1px;text-transform:uppercase;color:#444460;border-bottom:1px solid var(--border)}
-.learn-table td{padding:8px 10px;border-bottom:1px solid #ffffff05}
-
-/* Empty */
+/* learn table */
+.ltable{width:100%;border-collapse:collapse;font-size:12px}
+.ltable th{text-align:left;padding:7px 10px;font-size:9px;letter-spacing:1px;text-transform:uppercase;color:#444460;border-bottom:1px solid var(--bd)}
+.ltable td{padding:8px 10px;border-bottom:1px solid #ffffff05}
+/* design */
+.step-bar{display:flex;background:var(--sf);border:1px solid var(--bd);border-radius:12px;overflow:hidden;margin-bottom:22px}
+.step-btn{flex:1;padding:10px 8px;text-align:center;font-size:11px;cursor:pointer;transition:all .2s;border-right:1px solid var(--bd)}
+.step-btn:last-child{border-right:none}
+.step-btn.on{background:#7c6fcd18;color:#7c6fcd;font-weight:700}
+.step-btn:not(.on){color:#444460}
+/* impact */
+.ir{border-radius:10px;padding:14px 16px;margin-bottom:8px}
+/* empty */
 .empty{text-align:center;padding:50px 0}
-.empty-icon{font-size:34px;margin-bottom:10px}
-.empty-text{font-size:14px;color:#666688;font-weight:500}
-.empty-sub{font-size:11px;color:#333350;margin-top:5px}
-
-/* Week */
-.week-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
-.week-lbl{font-size:13px;font-weight:700}
-.week-lbl.today{color:var(--gold)} .week-lbl.past{color:#2a2a40}
-.week-line{flex:1;height:1px;background:#ffffff06}
-.today-badge{font-size:9px;background:#c8a84b15;color:var(--gold);padding:2px 8px;border-radius:99px;font-weight:700}
-
-@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+/* week */
+.wrow{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+@keyframes fu{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 </style>
 </head>
 <body>
-
 <div class="header">
   <div class="header-top">
-    <div>
-      <div class="logo-sub">LG BEST SHOP</div>
-      <div class="logo-main">업무 플래너</div>
-    </div>
-    <div class="header-right">
-      <div id="hDate"></div>
-      <strong id="hMeta"></strong>
-    </div>
+    <div><div class="logo-sub">LG BEST SHOP</div><div class="logo-main">업무 플래너</div></div>
+    <div class="hr"><div id="hDate"></div><strong id="hMeta"></strong></div>
   </div>
-  <div class="nav">
-    <button class="nav-btn active" onclick="go('today')">📋 오늘</button>
-    <button class="nav-btn" onclick="go('week')">🗓 이번주</button>
-    <button class="nav-btn" onclick="go('deploy')">🚀 배포캘린더</button>
-    <button class="nav-btn" onclick="go('board')">🗂 전체</button>
-    <button class="nav-btn" onclick="go('add')">＋ 등록</button>
-    <button class="nav-btn" onclick="go('design')">🎨 디자인</button>
-    <button class="nav-btn" onclick="go('impact')">🔍 영향도</button>
-    <button class="nav-btn" onclick="go('learn')">📊 공수학습</button>
-  </div>
+  <div class="nav" id="nav"></div>
 </div>
-<div class="content" id="app"></div>
+<div class="ct" id="app"></div>
 
 <script>
-// ═══════════════════════════════════════════════════
-// CONSTANTS
-// ═══════════════════════════════════════════════════
-const SK = 'lg-planner-v5';
-const ME = '정희라';
-const TEAM = '이지아';
-const TEAM_LABEL = '이지아 책임님';
-const TYPES = ['Task','Sub-task'];
-const TC = {Task:'#3d9be9','Sub-task':'#7c6fcd'};
-const WORK_TYPES = ['신규 디자인','디자인 수정','UI 수정','퍼블 수정','개발 수정','CMS 등록','기타'];
-const WORK_TYPE_COLORS = {'신규 디자인':'#7c6fcd','디자인 수정':'#e96d9b','UI 수정':'#3d9be9','퍼블 수정':'#00c2d4','개발 수정':'#f59e0b','CMS 등록':'#3ecf8e','기타':'#666688'};
-const TEAM_ROLES = ['기획','디자인','퍼블','개발'];
-const TEAM_MEMBERS = {
-  '기획': ['이지아','정희라'],
-  '디자인': ['김소진','양소라','신혜연'],
-  '퍼블': ['박혜미','김영서','이은진'],
-  '개발': ['이효근','김알찬']
-};
-const ALL_MEMBERS = Object.values(TEAM_MEMBERS).flat();
-// 매달 말일 정기 업무
-const MONTHLY_TASKS = ['One-Drive 업데이트','홈플러스 휴무일 등록','백화점 휴무일 등록'];
-const STS = ['To Do','In Progress','Done'];
-const SC = {'To Do':'#666688','In Progress':'#f59e0b','Done':'#3ecf8e'};
-const DK = ['일','월','화','수','목','금','토'];
-const VIEWS = ['today','week','deploy','board','add','design','impact','learn'];
+// ═══════════════════════════ CONSTANTS ═══════════════════════════
+const SK='lg-v7';
+const ME='정희라', TEAM='이지아', TL='이지아 책임님';
+const TYPES=['Task','Sub-task'];
+const TC={Task:'#3d9be9','Sub-task':'#7c6fcd'};
+const STS=['To Do','In Progress','Done'];
+const SC={'To Do':'#666688','In Progress':'#f59e0b','Done':'#3ecf8e'};
+const DK=['일','월','화','수','목','금','토'];
+const RC={기획:'#c8a84b',디자인:'#e96d9b',퍼블:'#00c2d4',개발:'#3d9be9'};
+const ROLES=['기획','디자인','퍼블','개발'];
+const MEMBERS={기획:[ME,TEAM],디자인:['김소진','양소라','신혜연'],퍼블:['박혜미','김영서','이은진'],개발:['이효근','김알찬']};
+const ALL=Object.values(MEMBERS).flat();
+const WT=['신규 디자인','디자인 수정','UI 수정','퍼블 수정','개발 수정','CMS 등록','기타'];
+const WC={'신규 디자인':'#7c6fcd','디자인 수정':'#e96d9b','UI 수정':'#3d9be9','퍼블 수정':'#00c2d4','개발 수정':'#f59e0b','CMS 등록':'#3ecf8e','기타':'#666688'};
+const MTH=['One-Drive 업데이트','홈플러스 휴무일 등록','백화점 휴무일 등록'];
+const VIEWS=['today','week','deploy','board','add','design','impact','learn'];
+const VLABEL=['📋 오늘','🗓 이번주','🚀 배포','🗂 전체','＋ 등록','🎨 디자인','🔍 영향도','📊 학습'];
 
-// ═══════════════════════════════════════════════════
-// STATE
-// ═══════════════════════════════════════════════════
-let S = {tasks:[], members:[ME, TEAM], impactHistory:[]};
-let view = 'today';
-let editId = null;
-let fd = {};
-let viewOwner = ME; // ME or TEAM
-let designType = 'banner';
-let designChecks = {};
-let designStep = 1;
-let designBrief = {campaignName:'',target:'',outputType:'banner',keywords:[],moods:[],colors:[],tones:[],refs:[],request:'',deadline:'',assignees:[]};
-let deployChecks = {};
-let impactInput = '';
-let impactResult = [];
+// ═══════════════════════════ STATE ═══════════════════════════
+let S={tasks:[],impactHistory:[],designHistory:[],lastBrief:null};
+let V='today', EID=null, FD={}, OWN=ME;
+let DS=1, DB={campaignName:'',target:'',outputType:'banner',keywords:[],moods:[],colors:[],tones:[],refs:[],request:'',deadline:'',assignees:[]};
+let DC={}, DPC={}, II='', IR=[];
 
-// ═══════════════════════════════════════════════════
-// STORAGE
-// ═══════════════════════════════════════════════════
-function load() {
-  try { const r=localStorage.getItem(SK); if(r) S=JSON.parse(r); } catch{}
-  S.members = ALL_MEMBERS;
-  if(!S.impactHistory) S.impactHistory=[];
-  if(!S.designHistory) S.designHistory=[];
+// ═══════════════════════════ STORAGE ═══════════════════════════
+function load(){try{const r=localStorage.getItem(SK);if(r)S=JSON.parse(r);}catch{}
+  if(!S.impactHistory)S.impactHistory=[];
+  if(!S.designHistory)S.designHistory=[];
 }
-function save() { localStorage.setItem(SK, JSON.stringify(S)); }
+function save(){localStorage.setItem(SK,JSON.stringify(S));}
 
-// ═══════════════════════════════════════════════════
-// UTILS
-// ═══════════════════════════════════════════════════
-const today = () => new Date().toISOString().split('T')[0];
-const fmt = s => { if(!s) return '-'; const d=new Date(s+'T00:00:00'); return `${d.getMonth()+1}/${d.getDate()}(${DK[d.getDay()]})`; };
-const dueIn = s => { if(!s) return null; return Math.ceil((new Date(s+'T00:00:00')-new Date(today()+'T00:00:00'))/864e5); };
-const diffD = (a,b) => Math.max(1,Math.ceil((new Date(b+'T00:00:00')-new Date(a+'T00:00:00'))/864e5));
-const addD = (s,n) => { const d=new Date(s+'T00:00:00'); d.setDate(d.getDate()+n); return d.toISOString().split('T')[0]; };
-const esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-const getWeek = () => { const t=new Date(),m=new Date(t); m.setDate(t.getDate()-((t.getDay()+6)%7)); return Array.from({length:7},(_,i)=>{const d=new Date(m);d.setDate(m.getDate()+i);return d.toISOString().split('T')[0];}); };
-const deployInfo = d => { const w=new Date(d+'T00:00:00').getDay(); if(w===2||w===4) return {type:'deploy',label:'🚀 배포'}; if(w===1||w===3) return {type:'test',label:'🧪 TC'}; return null; };
-const nextDeploy = () => { const t=new Date(); for(let i=1;i<=7;i++){const d=new Date(t);d.setDate(t.getDate()+i);const w=d.getDay();if(w===2||w===4)return d.toISOString().split('T')[0];} };
+// ═══════════════════════════ UTILS ═══════════════════════════
+const td=()=>new Date().toISOString().split('T')[0];
+const fmt=s=>{if(!s)return'-';const d=new Date(s+'T00:00:00');return`${d.getMonth()+1}/${d.getDate()}(${DK[d.getDay()]})`};
+const dueIn=s=>{if(!s)return null;return Math.ceil((new Date(s+'T00:00:00')-new Date(td()+'T00:00:00'))/864e5)};
+const diffD=(a,b)=>Math.max(1,Math.ceil((new Date(b+'T00:00:00')-new Date(a+'T00:00:00'))/864e5));
+const addD=(s,n)=>{const d=new Date(s+'T00:00:00');d.setDate(d.getDate()+n);return d.toISOString().split('T')[0]};
+const esc=s=>String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const wk=()=>{const t=new Date(),m=new Date(t);m.setDate(t.getDate()-((t.getDay()+6)%7));return Array.from({length:7},(_,i)=>{const d=new Date(m);d.setDate(m.getDate()+i);return d.toISOString().split('T')[0]})};
+const mRole=m=>Object.entries(MEMBERS).find(([,ms])=>ms.includes(m))?.[0]||null;
 
-// ═══════════════════════════════════════════════════
-// LEARNING ENGINE
-// ═══════════════════════════════════════════════════
-function computeEst() {
+// 다음 배포일 (화/목)
+function nextDeploy(){
+  const t=new Date();
+  for(let i=1;i<=7;i++){const d=new Date(t);d.setDate(t.getDate()+i);const w=d.getDay();if(w===2||w===4)return d.toISOString().split('T')[0];}
+}
+// 배포 전날 = TC일
+function tcDay(dep){const d=new Date(dep+'T00:00:00');d.setDate(d.getDate()-1);return d.toISOString().split('T')[0];}
+// 말일 워크데이
+function lastWD(y,mo){let d=new Date(y,mo,0);while(d.getDay()===0||d.getDay()===6)d.setDate(d.getDate()-1);return d.toISOString().split('T')[0];}
+
+// ═══════════════════════════ LEARNING ═══════════════════════════
+function compEst(){
   const g={};
-  S.tasks.forEach(t=>{
-    if(t.status==='Done'&&t.startDate&&t.endDate){
-      const days=diffD(t.startDate,t.endDate);
-      const k=`${t.assignee}||${t.type}`;
-      if(!g[k])g[k]=[];
-      g[k].push(days);
-    }
-  });
+  S.tasks.forEach(t=>{if(t.status==='Done'&&t.startDate&&t.endDate){const k=`${t.assignee}|${t.type}`;if(!g[k])g[k]=[];g[k].push(diffD(t.startDate,t.endDate));}});
   const r={};
   Object.entries(g).forEach(([k,arr])=>{
-    const[a,type]=k.split('||');
-    if(!r[a])r[a]={};
-    const recent=arr.slice(-3);
-    const avg=arr.reduce((s,x)=>s+x,0)/arr.length;
-    const rAvg=recent.reduce((s,x)=>s+x,0)/recent.length;
+    const[a,type]=k.split('|');if(!r[a])r[a]={};
+    const rec=arr.slice(-3),avg=arr.reduce((s,x)=>s+x,0)/arr.length,rAvg=rec.reduce((s,x)=>s+x,0)/rec.length;
     r[a][type]={avg:Math.round((avg*.4+rAvg*.6)*10)/10,count:arr.length,samples:arr.slice(-5)};
   });
   return r;
 }
-function getEst(assignee,type) {
-  const e=computeEst();
-  if(e[assignee]?.[type]) return e[assignee][type].avg;
+function getEst(a,type){
+  const e=compEst();if(e[a]?.[type])return e[a][type].avg;
   const all=S.tasks.filter(t=>t.status==='Done'&&t.type===type&&t.startDate&&t.endDate);
-  if(all.length) return Math.round(all.reduce((s,t)=>s+diffD(t.startDate,t.endDate),0)/all.length*10)/10;
+  if(all.length)return Math.round(all.reduce((s,t)=>s+diffD(t.startDate,t.endDate),0)/all.length*10)/10;
   return type==='Task'?3:1;
 }
 
-// ═══════════════════════════════════════════════════
-// TRANSFER DETECTION
-// 이지아 → 정희라로 바뀐 항목 감지
-// ═══════════════════════════════════════════════════
-function getTransferred() {
-  return S.tasks.filter(t => t.originalAssignee === TEAM && t.assignee === ME);
-}
-function getJihaTasks() {
-  return S.tasks.filter(t => t.assignee === TEAM && t.status !== 'Done');
-}
+// ═══════════════════════════ HELPERS ═══════════════════════════
+const getTrans=()=>S.tasks.filter(t=>t.originalAssignee===TEAM&&t.assignee===ME);
+const getJiha=()=>S.tasks.filter(t=>t.assignee===TEAM&&t.status!=='Done');
 
-// ═══════════════════════════════════════════════════
-// MONTHLY TASK REMINDER
-// 매달 말일(워크데이) 정기 업무 알림
-// ═══════════════════════════════════════════════════
-function getLastWorkday(year, month) {
-  // 해당 월 마지막 날부터 거슬러 올라가며 평일 찾기
-  let d = new Date(year, month, 0); // 말일
-  while(d.getDay()===0||d.getDay()===6) d.setDate(d.getDate()-1);
-  return d.toISOString().split('T')[0];
-}
-
-function getMonthlyReminder() {
-  const now = new Date();
-  const td = today();
-  const lastWD = getLastWorkday(now.getFullYear(), now.getMonth()+1);
-  const daysLeft = Math.ceil((new Date(lastWD+'T00:00:00') - new Date(td+'T00:00:00')) / 864e5);
-  if(daysLeft < 0 || daysLeft > 4) return null; // 말일 4일 전부터 알림
-  return {lastWD, daysLeft};
-}
-
-function monthlyReminderHTML() {
-  const r = getMonthlyReminder();
-  if(!r) return '';
-  const {lastWD, daysLeft} = r;
-  return `<div style="background:#3ecf8e0a;border:1px solid #3ecf8e20;border-radius:12px;padding:14px 16px;margin-bottom:16px">
-    <div style="font-size:12px;font-weight:700;color:#3ecf8e;margin-bottom:8px">📅 이달 말일 정기 업무 알림 (${fmt(lastWD)}${daysLeft===0?' · 오늘!':` · ${daysLeft}일 후`})</div>
-    ${MONTHLY_TASKS.map(t=>`<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid #ffffff06;font-size:12px;color:#aaa"><span style="color:#3ecf8e">▸</span>${t}</div>`).join('')}
-  </div>`;
-}
-// ═══════════════════════════════════════════════════
-const IMPACT_RULES=[
-  {keywords:['상품','product','item','카테고리','category'],area:'상품 목록/상세',risk:'high',desc:'상품 데이터 구조 변경 시 프론트 렌더링 오류 가능'},
-  {keywords:['가격','price','할인','discount','프로모션'],area:'가격 표시 영역',risk:'high',desc:'PLP/PDP 가격 UI, 장바구니 금액 계산 영향'},
-  {keywords:['배너','banner','이미지','image','visual'],area:'배너/비주얼',risk:'medium',desc:'배너 노출 조건, 이미지 URL 경로 확인 필요'},
-  {keywords:['메뉴','menu','gnb','lnb','nav'],area:'GNB/LNB 메뉴',risk:'high',desc:'전체 페이지 내비게이션 구조 영향'},
-  {keywords:['회원','member','user','등급','포인트'],area:'마이페이지/회원',risk:'medium',desc:'회원 등급 표시, 포인트 UI 영향'},
-  {keywords:['주문','order','장바구니','cart','결제','payment'],area:'주문/결제 플로우',risk:'high',desc:'결제 프로세스 전체 영향 — QA 필수'},
-  {keywords:['팝업','popup','modal','레이어'],area:'팝업/모달',risk:'medium',desc:'노출 조건, z-index, 이벤트 트리거 확인'},
-  {keywords:['검색','search','필터','filter','sort'],area:'검색/필터 UI',risk:'medium',desc:'검색 결과, 필터 옵션 변경 영향'},
-  {keywords:['footer','헤더','header','공통'],area:'공통 영역',risk:'high',desc:'전 페이지 공통 — 모든 페이지 영향'},
-  {keywords:['api','endpoint','url','파라미터'],area:'API 연동',risk:'high',desc:'API 변경 시 프론트 전면 점검 필요'},
-  {keywords:['텍스트','text','문구','copy','라벨'],area:'UI 텍스트',risk:'low',desc:'정적 문구 변경은 영향 낮음'},
-  {keywords:['이벤트','event','기획전','campaign'],area:'이벤트/기획전',risk:'medium',desc:'노출 조건, 시작/종료 로직 확인'},
-  {keywords:['재고','stock','품절','soldout'],area:'재고/품절 표시',risk:'medium',desc:'PLP/PDP 재고 UI, 장바구니 버튼 상태 영향'},
-];
-
-// ═══════════════════════════════════════════════════
-// DESIGN ENGINE
-// ═══════════════════════════════════════════════════
-const MOODS = [
-  {key:'premium',label:'프리미엄',icon:'✨',desc:'고급스럽고 절제된'},
-  {key:'warm',label:'웜/라이프스타일',icon:'🌿',desc:'따뜻하고 일상적인'},
-  {key:'bold',label:'볼드/강렬',icon:'⚡',desc:'강하고 임팩트있는'},
-  {key:'clean',label:'클린/미니멀',icon:'◻',desc:'깔끔하고 심플한'},
-  {key:'playful',label:'펀/캐주얼',icon:'🎉',desc:'밝고 친근한'},
-  {key:'seasonal',label:'시즌/감성',icon:'🍂',desc:'계절감 있는'},
-];
-const COLOR_DIRS = [
-  {key:'dark',label:'다크톤',colors:['#1a1a2e','#16213e','#0f3460']},
-  {key:'warm',label:'웜톤',colors:['#f5e6d3','#e8c9a0','#d4956a']},
-  {key:'cool',label:'쿨톤',colors:['#e8f4fd','#b3d9f2','#4a9eca']},
-  {key:'vivid',label:'비비드',colors:['#ff4757','#ffd32a','#3742fa']},
-  {key:'pastel',label:'파스텔',colors:['#ffeaa7','#dfe6e9','#fd79a8']},
-  {key:'mono',label:'모노크롬',colors:['#f5f5f5','#888888','#1a1a1a']},
-  {key:'earth',label:'어스톤',colors:['#8B6914','#A0785A','#C4A882']},
-  {key:'neon',label:'네온/팝',colors:['#00ff88','#ff0080','#7700ff']},
-];
-const TONES = ['밝고 경쾌하게','고급스럽고 무게감 있게','친근하고 따뜻하게','강렬하고 임팩트있게','감성적이고 서정적으로','심플하고 직관적으로'];
-
-// 키워드 기반 레퍼런스 추천 엔진
-const KEYWORD_MAP = [
-  {keywords:['냉장고','에어컨','세탁기','건조기','청소기','공기청정기'],mood:'premium',color:'dark',refs:['LG 시그니처 캠페인 스타일 — 블랙 배경, 제품 단독 조명 연출','기능 인포그래픽 — 핵심 스펙 수치를 타이포로 강조'],tip:'가전 프리미엄 제품은 어두운 배경에 제품 디테일을 강조하는 것이 효과적이에요.'},
-  {keywords:['봄','spring','새학기','3월','4월','5월'],mood:'warm',color:'pastel',refs:['파스텔 그라데이션 배경 + 플라워/그린 오브젝트','화사하고 밝은 톤 — 화이트/크림 베이스에 포인트 컬러'],tip:'봄 시즌은 파스텔 계열 + 자연물 오브젝트 조합이 클릭률이 높아요.'},
-  {keywords:['여름','summer','6월','7월','8월','쿨','시원'],mood:'bold',color:'cool',refs:['쿨톤 블루/민트 배경 — 시원함 직관적 전달','물/얼음/바람 모션 오브젝트 활용'],tip:'여름 캠페인은 쿨한 색감 + 시원함을 연상시키는 오브젝트가 핵심이에요.'},
-  {keywords:['가을','autumn','fall','10월','11월'],mood:'seasonal',color:'earth',refs:['어스톤 배경 — 브라운/오렌지/베이지 조합','낙엽/따뜻한 빛 오브젝트로 감성 연출'],tip:'가을 캠페인은 어스톤 컬러 + 따뜻한 감성 이미지가 공감대를 높여요.'},
-  {keywords:['겨울','winter','크리스마스','12월','1월','연말'],mood:'premium',color:'dark',refs:['딥 네이비/블랙 배경 — 골드/실버 포인트','연말 감성 — 빛/반짝임 이펙트 적극 활용'],tip:'연말 캠페인은 골드·실버 포인트 컬러로 특별함을 강조하세요.'},
-  {keywords:['할인','세일','혜택','특가','이벤트','프로모션'],mood:'bold',color:'vivid',refs:['레드/옐로우 포인트 — 가격/혜택 수치 최대 강조','CTA 버튼 면적 확대, 혜택 텍스트 계층 명확히'],tip:'혜택 강조 배너는 수치를 크게, CTA를 명확하게. 복잡한 정보는 리스트로 정리하세요.'},
-  {keywords:['신제품','신규','출시','런칭','new'],mood:'clean',color:'mono',refs:['화이트 배경 — 제품 단독 부각','티저 형식 — 궁금증 유발 카피 활용'],tip:'신제품 런칭은 제품 자체에 집중하는 클린한 구성이 신뢰감을 높여요.'},
-  {keywords:['키즈','어린이','아이','child','kids'],mood:'playful',color:'pastel',refs:['밝고 채도 높은 컬러 — 펀하고 친근한 분위기','캐릭터/일러스트 활용으로 아이 시선 집중'],tip:'키즈 타겟은 원색 계열의 밝고 활기찬 톤이 어필해요.'},
-  {keywords:['프리미엄','럭셔리','하이엔드','고급'],mood:'premium',color:'dark',refs:['블랙/딥그레이 배경 — 절제된 레이아웃','골드 포인트 컬러 — 고급감 부각'],tip:'프리미엄 포지셔닝은 여백과 절제가 핵심이에요. 정보를 덜어내세요.'},
-  {keywords:['가족','홈','인테리어','라이프스타일','집'],mood:'warm',color:'warm',refs:['따뜻한 인테리어 배경 + 가족/생활 연출','제품이 일상 속에 자연스럽게 녹아드는 구도'],tip:'라이프스타일 이미지는 실제 생활환경을 연출할수록 공감도가 높아요.'},
-];
-
-function getDesignRecs(keywords) {
-  if(!keywords.length) return null;
-  const kStr = keywords.join(' ').toLowerCase();
-  for(const map of KEYWORD_MAP) {
-    if(map.keywords.some(k=>kStr.includes(k))) return map;
-  }
-  return null;
-}
-
-function genBriefText(b) {
-  const moodLabel = MOODS.find(m=>m.key===b.moods[0])?.label || b.moods[0] || '미정';
-  const colorLabel = COLOR_DIRS.find(c=>c.key===b.colors[0])?.label || b.colors[0] || '미정';
-  const assigneeStr = b.assignees.length ? b.assignees.join(', ') : '미정';
-  const typeMap = {banner:'배너',keyvisual:'Key Visual',detail:'상세페이지'};
-  return `📋 디자인 브리프
-━━━━━━━━━━━━━━━━━━━━━━
-캠페인명: ${b.campaignName||'(미입력)'}
-산출물: ${typeMap[b.outputType]||b.outputType}
-타겟: ${b.target||'(미입력)'}
-마감일: ${b.deadline||'(미입력)'}
-담당: ${assigneeStr}
-
-━━━━━━━━━━━━━━━━━━━━━━
-🎨 디자인 방향
-키워드: ${b.keywords.length?b.keywords.join(', '):'(미입력)'}
-무드: ${b.moods.map(k=>MOODS.find(m=>m.key===k)?.label||k).join(', ')||'미정'}
-컬러: ${b.colors.map(k=>COLOR_DIRS.find(c=>c.key===k)?.label||k).join(', ')||'미정'}
-톤앤매너: ${b.tones.join(', ')||'미정'}
-
-━━━━━━━━━━━━━━━━━━━━━━
-📝 요청사항
-${b.request||'(없음)'}
-
-━━━━━━━━━━━━━━━━━━━━━━
-📌 참고 레퍼런스
-${b.refs.length?b.refs.map((r,i)=>`${i+1}. ${r}`).join('\n'):'(없음)'}
-━━━━━━━━━━━━━━━━━━━━━━`;
-}
-
-// ═══════════════════════════════════════════════════
-// RENDER
-// ═══════════════════════════════════════════════════
-function render() {
-  updateHeader();
-  const map={today:renderToday,week:renderWeek,deploy:renderDeploy,board:renderBoard,add:renderForm,design:renderDesign,impact:renderImpact,learn:renderLearn};
-  document.getElementById('app').innerHTML=(map[view]||renderToday)();
-  document.querySelectorAll('.nav-btn').forEach((b,i)=>b.classList.toggle('active',VIEWS[i]===view));
-}
-
-function updateHeader() {
-  document.getElementById('hDate').textContent=new Date().toLocaleDateString('ko-KR',{month:'long',day:'numeric',weekday:'short'});
-  const nd=nextDeploy();
-  const cnt=S.tasks.filter(t=>t.assignee===ME&&t.status!=='Done'&&t.startDate<=today()&&(!t.dueDate||t.dueDate>=today())).length;
-  const transferred=getTransferred().length;
-  document.getElementById('hMeta').innerHTML=`내 업무 ${cnt}건 · 다음배포 ${fmt(nd)}${transferred?` · ⚠ 이관 ${transferred}건`:''}`;
-}
-
-// ── Owner Toggle ────────────────────────────────────
-function ownerTabsHTML() {
-  const jihaActive = viewOwner===TEAM;
-  return `<div class="owner-tabs">
-    <button class="owner-tab hira ${viewOwner===ME?'':'inactive'}" onclick="setOwner('${ME}')">👤 ${ME} (나)</button>
-    <button class="owner-tab jiha ${jihaActive?'active':''}" onclick="setOwner('${TEAM}')">👤 ${TEAM_LABEL}</button>
-  </div>`;
-}
-function setOwner(name){viewOwner=name;render();}
-
-// ── Transfer Alert ──────────────────────────────────
-function transferAlertHTML() {
-  const items=getTransferred();
-  if(!items.length) return '';
-  const rows=items.map(t=>`<div class="alert-item">
-    <div class="alert-item-title">⚡ ${esc(t.code?t.code+' · ':'')}${esc(t.summary)}</div>
-    <div class="alert-item-meta">
-      <span style="color:#e96d9b">${TEAM} → ${ME}</span>
-      <span>마감: ${fmt(t.dueDate)}</span>
-      <span style="color:#f59e0b">이관일: ${fmt(t.transferDate)}</span>
-    </div>
-  </div>`).join('');
-  return `<div class="alert-banner">
-    <div class="alert-banner-title">🔄 Assignee 이관 알림 (${items.length}건) — ${TEAM_LABEL} → ${ME}</div>
-    ${rows}
-    <div style="font-size:10px;color:#555570;margin-top:8px">업무 수정에서 '이관 확인' 처리하면 알림에서 제거돼요</div>
+function ownerTabs(){
+  const isMe=OWN===ME;
+  return `<div class="otabs">
+    <button class="otab ${isMe?'me-on':'me-off'}" onclick="OWN='${ME}';render()">👤 ${ME} (나)</button>
+    <button class="otab ${!isMe?'ji-on':'ji-off'}" onclick="OWN='${TEAM}';render()">👤 ${TL}</button>
   </div>`;
 }
 
-// ── Jiha Side Panel ─────────────────────────────────
-function jihaSideHTML() {
-  const items=getJihaTasks();
-  if(!items.length) return '';
-  return `<div class="side-panel">
-    <div class="side-panel-title">👀 ${TEAM_LABEL} 진행 중 (${items.length}건) <span style="font-size:9px;color:#555570;font-weight:400;text-transform:none;letter-spacing:0">클릭하면 상세 보기</span></div>
-    ${items.map(t=>`<div class="side-task" onclick="openJihaDetail('${t.id}')">
-      <div class="side-task-title">${t.code?`<span style="color:#3d9be9;font-size:10px;font-weight:700;margin-right:4px">${esc(t.code)}</span>`:''}${esc(t.summary)}</div>
-      <div class="side-task-meta">
+function transferAlert(){
+  const items=getTrans();if(!items.length)return'';
+  return `<div style="background:#f1646408;border:1px solid #f164641e;border-radius:12px;padding:13px 16px;margin-bottom:14px">
+    <div style="font-size:12px;font-weight:700;color:var(--red);margin-bottom:8px">🔄 이관 알림 (${items.length}건) — ${TL} → ${ME}</div>
+    ${items.map(t=>`<div style="background:var(--bg);border:1px solid #f164641e;border-radius:8px;padding:10px 12px;margin-bottom:6px;font-size:12px">
+      <div style="font-weight:500;margin-bottom:3px">${t.code?`<span style="color:var(--blue);font-size:10px;margin-right:4px">${esc(t.code)}</span>`:''}${esc(t.summary)}</div>
+      <div style="font-size:11px;color:#555570;display:flex;gap:8px"><span style="color:var(--pink)">${TL}→${ME}</span><span>마감:${fmt(t.dueDate)}</span><span style="color:var(--orange)">이관:${fmt(t.transferDate)}</span></div>
+    </div>`).join('')}
+    <div style="font-size:10px;color:#555570;margin-top:6px">업무 수정 → '이관 확인' 처리 시 알림 제거</div>
+  </div>`;
+}
+
+function monthlyReminder(){
+  const now=new Date(),t=td();
+  const lwd=lastWD(now.getFullYear(),now.getMonth()+1);
+  const left=Math.ceil((new Date(lwd+'T00:00:00')-new Date(t+'T00:00:00'))/864e5);
+  if(left<0||left>4)return'';
+  return `<div class="greenbox">📅 <strong>이달 말일 정기 업무</strong> ${fmt(lwd)} ${left===0?'· 오늘!':'· '+left+'일 후'}<br>
+    ${MTH.map(m=>`<span style="color:var(--green)">▸ ${m}</span>`).join('&nbsp;&nbsp;')}</div>`;
+}
+
+function jihaSide(){
+  const items=getJiha();if(!items.length)return'';
+  return `<div class="sp">
+    <div style="font-size:11px;font-weight:700;color:var(--pink);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px">👀 ${TL} 진행 중 (${items.length}건)</div>
+    ${items.map(t=>`<div class="sp-item" onclick="editTask('${t.id}')">
+      <div style="font-weight:500;margin-bottom:3px">${t.code?`<span style="color:var(--blue);font-size:10px;font-weight:700;margin-right:4px">${esc(t.code)}</span>`:''}${esc(t.summary)}</div>
+      <div style="font-size:10px;color:#555570;display:flex;gap:8px">
         <span style="color:${TC[t.type]}">${t.type}</span>
         <span style="color:${SC[t.status]}">${t.status}</span>
-        <span>마감: ${fmt(t.dueDate)}</span>
-        ${dueIn(t.dueDate)!==null&&dueIn(t.dueDate)<=2?`<span style="color:#f16464">D-${dueIn(t.dueDate)}</span>`:''}
+        <span>마감:${fmt(t.dueDate)}</span>
+        ${(dueIn(t.dueDate)||99)<=2?`<span style="color:var(--red)">D-${dueIn(t.dueDate)}</span>`:''}
       </div>
     </div>`).join('')}
   </div>`;
 }
 
-function openJihaDetail(id){editTask(id);}
-
-// ── TODAY ───────────────────────────────────────────
-function renderToday() {
-  const td=today();
-  const isMe=viewOwner===ME;
-  const active=S.tasks.filter(t=>t.assignee===viewOwner&&t.status!=='Done'&&t.startDate<=td&&(!t.dueDate||t.dueDate>=td))
-    .sort((a,b)=>(dueIn(a.dueDate)||99)-(dueIn(b.dueDate)||99));
-  const overdue=S.tasks.filter(t=>t.assignee===viewOwner&&t.status!=='Done'&&t.dueDate&&t.dueDate<td);
-  const nd=nextDeploy();
-  const daysToND=Math.ceil((new Date(nd+'T00:00:00')-new Date(td+'T00:00:00'))/864e5);
-  const di=deployInfo(td);
-
-  let html=ownerTabsHTML();
-
-  // Alerts only for ME view
-  if(isMe){
-    html+=transferAlertHTML();
-    html+=monthlyReminderHTML();
-    if(daysToND<=2) html+=`<div class="danger-box">🚀 <strong>${fmt(nd)} 배포</strong> ${daysToND===0?'오늘':daysToND===1?'내일':'이틀 후'}! 배포 대상 ${S.tasks.filter(t=>t.assignee===ME&&t.status!=='Done'&&t.dueDate&&t.dueDate<=nd).length}건 확인 필요</div>`;
-    if(di?.type==='test') html+=`<div class="warn-box">🧪 오늘은 <strong>TC/테스트일</strong>입니다. 버그 체크 및 TC 작성을 완료해주세요.</div>`;
-    if(di?.type==='deploy') html+=`<div class="danger-box">🚀 오늘은 <strong>배포일</strong>입니다. 최종 확인 후 배포를 진행해주세요.</div>`;
-  }
-
-  if(overdue.length){
-    html+=`<div class="section-label" style="color:#f16464;margin-bottom:8px">⚠ 기한 초과 (${overdue.length})</div>`;
-    html+=overdue.map(t=>taskCard(t)).join('');
-    html+='<div style="height:16px"></div>';
-  }
-  if(active.length){
-    html+=`<div class="section-label" style="color:#c8a84b">오늘 처리할 업무 (${active.length})</div>`;
-    html+=active.map(t=>taskCard(t)).join('');
-  } else if(!overdue.length){
-    html+=`<div class="empty"><div class="empty-icon">${isMe?'🎯':'👀'}</div><div class="empty-text">오늘 처리할 업무가 없어요</div></div>`;
-  }
-
-  // Always show jiha side panel in ME view
-  if(isMe) html+=jihaSideHTML();
-
-  return html;
-}
-
-// ── WEEK ────────────────────────────────────────────
-function renderWeek() {
-  const td=today();
-  let html=ownerTabsHTML();
-  html+=getWeek().map(day=>{
-    const di=deployInfo(day),isToday=day===td,isPast=day<today();
-    const dayTasks=S.tasks.filter(t=>t.assignee===viewOwner&&t.status!=='Done'&&t.startDate<=day&&(!t.dueDate||t.dueDate>=day));
-    const badge=isToday?'<span class="today-badge">TODAY</span>':'';
-    const diHtml=di?`<span class="tag tag-round" style="background:${di.type==='deploy'?'#f1646420':'#f59e0b20'};color:${di.type==='deploy'?'#f16464':'#f59e0b'};font-size:9px">${di.label}</span>`:'';
-    return `<div style="margin-bottom:22px">
-      <div class="week-row"><span class="week-lbl ${isToday?'today':isPast?'past':''}">${fmt(day)}</span>${badge}${diHtml}<div class="week-line"></div><span style="font-size:11px;color:#333350">${dayTasks.length}건</span></div>
-      ${dayTasks.length?dayTasks.map(t=>taskCard(t)).join(''):'<div style="font-size:11px;color:#1e1e30;text-align:center;padding:6px">—</div>'}
-    </div>`;
-  }).join('');
-  if(viewOwner===ME) html+=jihaSideHTML();
-  return html;
-}
-
-// ── DEPLOY ──────────────────────────────────────────
-function renderDeploy() {
-  const week=getWeek(),td=today(),nd=nextDeploy();
-  const CHECKLIST=['기획서 최종 확인','TC 케이스 작성','테스트 환경 검증','디자인 QA','개발 코드 리뷰','스테이징 배포 확인','핫픽스 담당자 지정'];
-  const ndTasks=S.tasks.filter(t=>t.assignee===ME&&t.status!=='Done'&&t.dueDate&&t.dueDate<=nd);
-
-  const legend=`<div style="display:flex;gap:14px;margin-bottom:14px;flex-wrap:wrap">
-    ${[['#f16464','배포일 (화/목)'],['#f59e0b','TC/테스트 (월/수)'],['#c8a84b','오늘']].map(([c,l])=>`<div style="display:flex;align-items:center;gap:5px;font-size:11px;color:#666688"><div style="width:8px;height:8px;border-radius:3px;background:${c}"></div>${l}</div>`).join('')}
-  </div>`;
-
-  const cal=`<div class="cal-grid">${week.map(day=>{
-    const di=deployInfo(day),isToday=day===td,isPast=day<td;
-    const dayTasks=S.tasks.filter(t=>t.assignee===ME&&t.status!=='Done'&&t.startDate<=day&&(!t.dueDate||t.dueDate>=day));
-    const d=new Date(day+'T00:00:00');
-    const cls=['cal-day',isToday?'today':'',di?.type==='deploy'?'deploy-day':di?.type==='test'?'test-day':'',isPast?'past':''].filter(Boolean).join(' ');
-    return `<div class="${cls}">
-      <div class="cal-dn">${DK[d.getDay()]}</div>
-      <div class="cal-dd">${d.getDate()}</div>
-      ${di?`<span class="cal-badge" style="background:${di.type==='deploy'?'#f1646420':'#f59e0b20'};color:${di.type==='deploy'?'#f16464':'#f59e0b'}">${di.label}</span>`:''}
-      <div style="margin-top:3px">${dayTasks.slice(0,2).map(t=>`<div style="font-size:9px;color:#555570;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:left;display:flex;align-items:center;gap:2px"><span style="width:4px;height:4px;border-radius:99px;background:${TC[t.type]};flex-shrink:0;display:inline-block"></span>${esc(t.summary)}</div>`).join('')}${dayTasks.length>2?`<div style="font-size:9px;color:#444460">+${dayTasks.length-2}</div>`:''}</div>
-    </div>`;
-  }).join('')}</div>`;
-
-  const cl=`<div class="card" style="margin-bottom:14px">
-    <div class="section-label" style="color:#f16464;margin-bottom:12px">🚀 다음 배포일 ${fmt(nd)} 체크리스트</div>
-    <ul class="checklist" style="padding:0">${CHECKLIST.map((item,i)=>`<li id="dcl-${i}" onclick="toggleDeploy(${i})" style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #ffffff06;font-size:12px;color:#888;cursor:pointer"><span style="color:#333350">○</span>${item}</li>`).join('')}</ul>
-  </div>`;
-
-  return legend+cal+cl+(ndTasks.length?`<div class="section-label" style="color:#c8a84b;margin-bottom:8px">배포 예정 내 업무 (${ndTasks.length}건)</div>${ndTasks.map(t=>taskCard(t)).join('')}`:'');
-}
-
-function toggleDeploy(i){
-  deployChecks[i]=!deployChecks[i];
-  const el=document.getElementById(`dcl-${i}`);
-  if(el){el.style.color=deployChecks[i]?'#3ecf8e':'#888';el.querySelector('span').textContent=deployChecks[i]?'●':'○';el.querySelector('span').style.color=deployChecks[i]?'#3ecf8e':'#333350';}
-}
-
-// ── BOARD ───────────────────────────────────────────
-function renderBoard() {
-  let html=ownerTabsHTML();
-  html+=STS.map(s=>{
-    const g=S.tasks.filter(t=>t.assignee===viewOwner&&t.status===s);
-    return `<div style="margin-bottom:26px"><div class="section-label" style="color:${SC[s]}">${s} (${g.length})</div>${g.length?g.map(t=>taskCard(t)).join(''):'<div style="font-size:11px;color:#1e1e30;padding:6px 0">—</div>'}</div>`;
-  }).join('');
-  if(viewOwner===ME) html+=jihaSideHTML();
-  return html;
-}
-
-// ── TASK CARD ────────────────────────────────────────
-function taskCard(t) {
+// ═══════════════════════════ TASK CARD ═══════════════════════════
+function taskCard(t){
   const u=dueIn(t.dueDate);
   const uc=u===null?'#555':u<0?'#f16464':u===0?'#f59e0b':u<=2?'#f97316':'#444460';
   const dl=u===null?'마감미정':u<0?`${Math.abs(u)}일초과`:u===0?'오늘마감':`D-${u}`;
-  const isJiha=t.assignee===TEAM;
-  const isTransferred=t.originalAssignee===TEAM&&t.assignee===ME;
-  const estD=t.assignee?getEst(t.assignee,t.type):null;
-  const borderColor=isTransferred?'#f16464':isJiha?'#e96d9b':(TC[t.type]||'#888');
+  const isJ=t.assignee===TEAM, isTr=t.originalAssignee===TEAM&&t.assignee===ME;
+  const bc=isTr?'#f16464':isJ?'#e96d9b':(TC[t.type]||'#888');
+  const workers=t.workers||[], scheds=t.teamSchedules||{};
+  const hasDesign=MEMBERS['디자인'].some(m=>workers.includes(m));
+  const schedTags=ROLES.filter(r=>scheds[r]?.start).map(r=>{
+    const s=scheds[r], days=s.start&&s.end?diffD(s.start,s.end):null;
+    return`<span class="tagr" style="background:${RC[r]}18;color:${RC[r]}">${r}${days?' '+days+'일':''}</span>`;
+  }).join('');
 
-  return `<div class="task-card${t.status==='Done'?' done':''}${isJiha?' jiha-card':''}${isTransferred?' transferred':''}" style="border-left:3px solid ${t.status==='Done'?'#ffffff08':borderColor}">
-  ${isTransferred?`<div class="transferred-badge">🔄 이관됨 (${TEAM_LABEL}→${ME})</div>`:''}
-  <div class="tc-inner">
-    <div class="tc-left">
+  return `<div class="tc${t.status==='Done'?' done':''}${isJ?' jiha':''}${isTr?' trans':''}" style="border-left:3px solid ${t.status==='Done'?'#ffffff08':bc}">
+  ${isTr?`<div class="tbadge">🔄 이관됨</div>`:''}
+  <div class="tc-in">
+    <div class="tc-l">
       <div class="tc-tags">
-        ${t.code?`<span class="tag" style="background:#3d9be912;color:#3d9be9">${esc(t.code)}</span>`:''}
+        ${t.code?`<span class="tag" style="background:#3d9be912;color:var(--blue)">${esc(t.code)}</span>`:''}
         <span class="tag" style="background:${TC[t.type]}18;color:${TC[t.type]}">${t.type}</span>
-        ${t.workType?`<span class="tag tag-round" style="background:${WORK_TYPE_COLORS[t.workType]||'#888'}18;color:${WORK_TYPE_COLORS[t.workType]||'#888'}">${t.workType}</span>`:''}
-        ${t.teamRole?`<span class="tag" style="background:#ffffff08;color:#888888;font-size:9px">${t.teamRole}팀</span>`:''}
-        <span class="tag tag-round" style="background:${SC[t.status]}18;color:${SC[t.status]}">${t.status}</span>
-        <span class="tag tag-round" style="background:${uc}12;color:${uc}">${dl}</span>
-        ${isJiha?`<span class="tag tag-round" style="background:#e96d9b18;color:#e96d9b">👤 ${TEAM_LABEL}</span>`:''}
-        ${t.isDesign?`<span class="tag tag-round" style="background:#7c6fcd18;color:#7c6fcd">🎨 디자인</span>`:''}
+        ${t.workType?`<span class="tagr" style="background:${WC[t.workType]||'#888'}18;color:${WC[t.workType]||'#888'}">${t.workType}</span>`:''}
+        <span class="tagr" style="background:${SC[t.status]}18;color:${SC[t.status]}">${t.status}</span>
+        <span class="tagr" style="background:${uc}12;color:${uc}">${dl}</span>
+        ${hasDesign?`<span class="tagr" style="background:#e96d9b18;color:#e96d9b">🎨 디자인</span>`:''}
+        ${isJ?`<span class="tagr" style="background:#e96d9b18;color:#e96d9b">👤 ${TL}</span>`:''}
       </div>
       <div class="tc-title">${esc(t.summary)}</div>
       <div class="tc-meta">
-        <span>시작: ${fmt(t.startDate)}</span>
-        <span>마감: ${fmt(t.dueDate)}</span>
         <span>👤 ${esc(t.assignee||'-')}${t.assignee===ME?' (나)':t.assignee===TEAM?' (책임님)':''}</span>
-        ${estD&&t.status!=='Done'?`<span style="color:#c8a84b">예상 ${estD}일</span>`:''}
+        ${t.startDate?`<span>시작:${fmt(t.startDate)}</span>`:''}
+        ${t.dueDate?`<span>마감:${fmt(t.dueDate)}</span>`:''}
       </div>
-      ${(t.workers&&t.workers.length)?`<div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:5px">${t.workers.map(w=>{const role=Object.entries(TEAM_MEMBERS).find(([,ms])=>ms.includes(w))?.[0];const rc={기획:'#c8a84b',디자인:'#e96d9b',퍼블:'#00c2d4',개발:'#3d9be9'}[role]||'#888';return`<span style="font-size:10px;padding:2px 7px;border-radius:99px;background:${rc}18;color:${rc}">${w}</span>`;}).join('')}</div>`:''}
-      ${t.memo?`<div class="tc-memo">${esc(t.memo)}</div>`:''}
+      ${workers.length?`<div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:5px">${workers.map(w=>{const r=mRole(w);return`<span class="tagr" style="background:${RC[r]||'#888'}18;color:${RC[r]||'#888'}">${w}</span>`;}).join('')}</div>`:''}
+      ${schedTags?`<div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:4px">${schedTags}</div>`:''}
+      ${t.memo?`<div style="font-size:11px;color:#3a3a55;margin-top:5px">${esc(t.memo)}</div>`:''}
     </div>
-    <div class="tc-right">
+    <div style="display:flex;flex-direction:column;gap:5px;align-items:flex-end;flex-shrink:0">
       <div style="display:flex;gap:3px">
-        <button class="icon-btn" onclick="editTask('${t.id}')">✏️</button>
-        <button class="icon-btn" onclick="delTask('${t.id}')">🗑</button>
+        <button style="background:transparent;border:none;cursor:pointer;font-size:13px;padding:3px 4px;opacity:.5;transition:opacity .15s" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=.5" onclick="editTask('${t.id}')">✏️</button>
+        <button style="background:transparent;border:none;cursor:pointer;font-size:13px;padding:3px 4px;opacity:.5;transition:opacity .15s" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=.5" onclick="delTask('${t.id}')">🗑</button>
       </div>
-      <select class="status-sel" onchange="setStatus('${t.id}',this.value)" style="color:${SC[t.status]}">
+      <select style="background:#ffffff06;border:1px solid #ffffff10;border-radius:6px;color:${SC[t.status]};font-size:10px;padding:3px 6px;cursor:pointer;font-family:inherit;outline:none" onchange="setSts('${t.id}',this.value)">
         ${STS.map(s=>`<option${s===t.status?' selected':''}>${s}</option>`).join('')}
       </select>
     </div>
   </div></div>`;
 }
 
-// ── ADD / EDIT FORM ──────────────────────────────────
-function renderForm() {
-  const isEdit=!!editId;
-  const f=fd;
-  const est=f.assignee&&f.type?getEst(f.assignee,f.type):null;
-  const estDate=est&&f.startDate?addD(f.startDate,Math.round(est)):null;
-  const isTransferred=f.originalAssignee===TEAM&&f.assignee===ME;
+// ═══════════════════════════ RENDER ═══════════════════════════
+function render(){
+  updH();
+  document.getElementById('nav').innerHTML=VIEWS.map((v,i)=>`<button class="nb${V===v?' on':''}" onclick="go('${v}')">${VLABEL[i]}</button>`).join('');
+  const map={today:rToday,week:rWeek,deploy:rDeploy,board:rBoard,add:rForm,design:rDesign,impact:rImpact,learn:rLearn};
+  document.getElementById('app').innerHTML=(map[V]||rToday)();
+}
+function updH(){
+  document.getElementById('hDate').textContent=new Date().toLocaleDateString('ko-KR',{month:'long',day:'numeric',weekday:'short'});
+  const nd=nextDeploy(),t=td();
+  const cnt=S.tasks.filter(x=>x.assignee===ME&&x.status!=='Done'&&x.startDate<=t&&(!x.dueDate||x.dueDate>=t)).length;
+  const tr=getTrans().length;
+  document.getElementById('hMeta').innerHTML=`내 업무 ${cnt}건 · 다음배포 ${fmt(nd)}${tr?` · ⚠ 이관 ${tr}건`:''}`;
+}
+
+// ─── TODAY ───────────────────────────────────────────────────
+function rToday(){
+  const t=td(),nd=nextDeploy(),tc=tcDay(nd),isMe=OWN===ME;
+  const active=S.tasks.filter(x=>x.assignee===OWN&&x.status!=='Done'&&x.startDate<=t&&(!x.dueDate||x.dueDate>=t)).sort((a,b)=>(dueIn(a.dueDate)||99)-(dueIn(b.dueDate)||99));
+  const overdue=S.tasks.filter(x=>x.assignee===OWN&&x.status!=='Done'&&x.dueDate&&x.dueDate<t);
+  const daysND=Math.ceil((new Date(nd+'T00:00:00')-new Date(t+'T00:00:00'))/864e5);
+  let h=ownerTabs();
+  if(isMe){
+    h+=transferAlert(); h+=monthlyReminder();
+    if(t===nd) h+=`<div class="dangerbox">🚀 오늘은 <strong>배포일</strong>입니다. 최종 확인 후 배포를 진행해주세요.</div>`;
+    else if(t===tc) h+=`<div class="warnbox">🧪 오늘은 <strong>TC/테스트일</strong>입니다. 버그 체크 및 TC 작성을 완료해주세요.</div>`;
+    else if(daysND<=2) h+=`<div class="dangerbox">🚀 <strong>${fmt(nd)} 배포</strong> ${daysND===1?'내일':'이틀 후'}! 배포 예정 업무 ${S.tasks.filter(x=>x.assignee===ME&&x.status!=='Done'&&x.dueDate===nd).length}건 확인 필요</div>`;
+  }
+  if(overdue.length){h+=`<div class="sl" style="color:var(--red)">⚠ 기한 초과 (${overdue.length})</div>`;h+=overdue.map(taskCard).join('');h+='<div style="height:16px"></div>';}
+  if(active.length){h+=`<div class="sl" style="color:var(--gold)">오늘 처리할 업무 (${active.length})</div>`;h+=active.map(taskCard).join('');}
+  else if(!overdue.length) h+=`<div class="empty"><div style="font-size:34px;margin-bottom:10px">🎯</div><div style="font-size:14px;color:#666688">오늘 처리할 업무가 없어요</div></div>`;
+  if(isMe) h+=jihaSide();
+  return h;
+}
+
+// ─── WEEK ─────────────────────────────────────────────────────
+function rWeek(){
+  const t=td(),nd=nextDeploy(),tc=tcDay(nd);
+  let h=ownerTabs();
+  h+=wk().map(day=>{
+    const isT=day===t,isPast=day<td();
+    const dayTasks=S.tasks.filter(x=>x.assignee===OWN&&x.status!=='Done'&&x.dueDate===day);
+    const depBadge=day===nd?`<span class="tagr" style="background:#f1646420;color:#f16464">🚀 배포일</span>`:day===tc?`<span class="tagr" style="background:#f59e0b20;color:#f59e0b">🧪 TC</span>`:'';
+    return `<div style="margin-bottom:22px">
+      <div class="wrow">
+        <span style="font-size:13px;font-weight:700;color:${isT?'var(--gold)':isPast?'#2a2a40':'var(--tx)'}">${fmt(day)}</span>
+        ${isT?`<span class="tagr" style="background:#c8a84b15;color:var(--gold)">TODAY</span>`:''}
+        ${depBadge}
+        <div style="flex:1;height:1px;background:#ffffff06"></div>
+        <span style="font-size:11px;color:#333350">${dayTasks.length}건</span>
+      </div>
+      ${dayTasks.length?dayTasks.map(taskCard).join(''):'<div style="font-size:11px;color:#1e1e30;text-align:center;padding:6px">—</div>'}
+    </div>`;
+  }).join('');
+  if(OWN===ME) h+=jihaSide();
+  return h;
+}
+
+// ─── DEPLOY ───────────────────────────────────────────────────
+// 배포 : 다음 배포일 1회 + 전날 TC일 1회만 표시
+function rDeploy(){
+  const nd=nextDeploy(), tc=tcDay(nd), t=td();
+  const ndTasks=S.tasks.filter(x=>x.assignee===ME&&x.status!=='Done'&&x.dueDate===nd);
+  const CL=['기획서 최종 확인','TC 케이스 작성 완료','테스트 환경 검증','디자인 QA 완료','개발 코드 리뷰','스테이징 배포 확인','핫픽스 담당자 지정'];
+
+  const tcCard=`<div style="background:#f59e0b0a;border:1px solid #f59e0b25;border-radius:14px;padding:18px 20px;margin-bottom:12px">
+    <div class="sl" style="color:var(--orange);margin-bottom:4px">🧪 TC / 테스트일</div>
+    <div style="font-size:20px;font-weight:700;color:var(--tx);margin-bottom:10px">${fmt(tc)}</div>
+    <div style="font-size:12px;color:#888;line-height:1.8">배포 전날 기획자 직접 QA 및 TC 작성일이에요. 버그 발견 시 개발팀에 즉시 공유해주세요.</div>
+    ${t===tc?`<div class="warnbox" style="margin-top:10px;margin-bottom:0">⚠ 오늘이 TC일입니다!</div>`:''}
+  </div>`;
+
+  const depCard=`<div style="background:#f164640a;border:1px solid #f1646425;border-radius:14px;padding:18px 20px;margin-bottom:12px">
+    <div class="sl" style="color:var(--red);margin-bottom:4px">🚀 배포일</div>
+    <div style="font-size:20px;font-weight:700;color:var(--tx);margin-bottom:12px">${fmt(nd)}</div>
+    <ul style="padding:0;list-style:none">
+      ${CL.map((item,i)=>`<div id="dcl-${i}" onclick="togDep(${i})" class="cl-item" style="color:${DPC[i]?'var(--green)':'#888'}">
+        <span style="color:${DPC[i]?'var(--green)':'#333350'}">${DPC[i]?'●':'○'}</span>${item}
+      </div>`).join('')}
+    </ul>
+    ${t===nd?`<div class="dangerbox" style="margin-top:10px;margin-bottom:0">🚀 오늘이 배포일입니다!</div>`:''}
+  </div>`;
+
+  const tasksHtml=ndTasks.length
+    ?`<div class="sl" style="color:var(--gold);margin-bottom:8px">배포 예정 업무 (${ndTasks.length}건)</div>${ndTasks.map(taskCard).join('')}`
+    :`<div style="font-size:12px;color:#333350;text-align:center;padding:20px">배포 예정 업무가 없어요</div>`;
+
+  return tcCard+depCard+tasksHtml;
+}
+function togDep(i){DPC[i]=!DPC[i];const el=document.getElementById(`dcl-${i}`);if(el){el.style.color=DPC[i]?'var(--green)':'#888';el.querySelector('span').textContent=DPC[i]?'●':'○';el.querySelector('span').style.color=DPC[i]?'var(--green)':'#333350';}}
+
+// ─── BOARD ────────────────────────────────────────────────────
+function rBoard(){
+  let h=ownerTabs();
+  h+=STS.map(s=>{const g=S.tasks.filter(x=>x.assignee===OWN&&x.status===s);
+    return`<div style="margin-bottom:26px"><div class="sl" style="color:${SC[s]}">${s} (${g.length})</div>${g.length?g.map(taskCard).join(''):'<div style="font-size:11px;color:#1e1e30;padding:6px">—</div>'}</div>`;
+  }).join('');
+  if(OWN===ME) h+=jihaSide();
+  return h;
+}
+
+// ─── FORM ─────────────────────────────────────────────────────
+function rForm(){
+  const isEdit=!!EID, f=FD, isTr=f.originalAssignee===TEAM&&f.assignee===ME;
+  const workers=f.workers||[], scheds=f.teamSchedules||{};
+  const hasDesign=MEMBERS['디자인'].some(m=>workers.includes(m));
+  const allS=ROLES.map(r=>scheds[r]?.start).filter(Boolean).sort();
+  const allE=ROLES.map(r=>scheds[r]?.end).filter(Boolean).sort();
+  const oStart=allS[0]||null, oEnd=allE.slice(-1)[0]||null;
+
+  const teamBlocks=ROLES.map(role=>{
+    const rc=RC[role], sc=scheds[role]||{};
+    const rw=MEMBERS[role].filter(m=>workers.includes(m)), has=rw.length>0;
+    const est=rw[0]?getEst(rw[0],f.type||'Task'):null;
+    const estE=est&&sc.start?addD(sc.start,Math.round(est)):null;
+    const days=sc.start&&sc.end?diffD(sc.start,sc.end):null;
+    return `<div style="background:${has?rc+'08':'#ffffff02'};border:1px solid ${has?rc+'25':'#ffffff08'};border-radius:10px;padding:12px 14px;margin-bottom:8px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:${has?'10px':'0'}">
+        <span style="font-size:10px;font-weight:700;color:${has?rc:'#333350'};letter-spacing:1px;min-width:32px">${role}팀</span>
+        <div style="display:flex;gap:5px;flex-wrap:wrap;flex:1">
+          ${MEMBERS[role].map(m=>{const sel=workers.includes(m);
+            return`<button onclick="togW('${m}')" style="padding:4px 10px;border-radius:99px;border:1px solid ${sel?rc:'#ffffff10'};background:${sel?rc+'20':'transparent'};color:${sel?rc:'#444460'};font-size:11px;font-weight:${sel?700:400};cursor:pointer;font-family:inherit;transition:all .2s">${m}${sel?' ✓':''}</button>`;
+          }).join('')}
+        </div>
+        ${days?`<span class="tagr" style="background:${rc}18;color:${rc};font-weight:700;flex-shrink:0">${days}일</span>`:''}
+      </div>
+      ${has?`<div style="display:flex;gap:8px;flex-wrap:wrap">
+        <div style="display:flex;align-items:center;gap:5px;flex:1;min-width:130px">
+          <span style="font-size:10px;color:#444460;white-space:nowrap">시작</span>
+          <input type="date" value="${sc.start||''}" onchange="setTS('${role}','start',this.value)" style="flex:1;background:#07070e;border:1px solid #ffffff15;border-radius:7px;color:#e4e4f0;padding:6px 8px;font-size:11px;outline:none;font-family:inherit">
+        </div>
+        <div style="display:flex;align-items:center;gap:5px;flex:1;min-width:130px">
+          <span style="font-size:10px;color:#444460;white-space:nowrap">마감</span>
+          <input type="date" value="${sc.end||''}" onchange="setTS('${role}','end',this.value)" style="flex:1;background:#07070e;border:1px solid #ffffff15;border-radius:7px;color:#e4e4f0;padding:6px 8px;font-size:11px;outline:none;font-family:inherit">
+        </div>
+        ${estE&&!sc.end?`<button onclick="setTS('${role}','end','${estE}')" style="background:${rc}18;border:1px solid ${rc}30;border-radius:7px;color:${rc};font-size:10px;padding:6px 10px;cursor:pointer;font-family:inherit;white-space:nowrap">📊 ${est}일 자동</button>`:''}
+      </div>`:`<div style="font-size:10px;color:#333350;margin-top:2px">작업자 선택 후 일정을 입력할 수 있어요</div>`}
+    </div>`;
+  }).join('');
 
   return `<div class="card">
   <div style="font-size:15px;font-weight:700;margin-bottom:18px">${isEdit?'업무 수정':'새 업무 등록'}</div>
+  ${isTr?`<div class="pinkbox">🔄 <strong>${TL}</strong>에서 <strong>${ME}</strong>로 이관된 항목이에요.</div>`:''}
 
-  ${isTransferred?`<div class="pink-box">🔄 이 업무는 <strong>${TEAM_LABEL}</strong>에서 <strong>${ME}</strong>로 이관된 항목이에요.</div>`:''}
-
-  <label class="form-label">업무 유형</label>
+  <label class="fl">업무 유형</label>
   <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:13px">
-    ${WORK_TYPES.map(wt=>{const c=WORK_TYPE_COLORS[wt];return`<button onclick="fd.workType='${wt}';render()" style="padding:6px 12px;border-radius:99px;border:1px solid ${(f.workType||'')=== wt?c:'#ffffff12'};background:${(f.workType||'')=== wt?c+'20':'#ffffff05'};color:${(f.workType||'')=== wt?c:'#555570'};font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s">${wt}</button>`;}).join('')}
+    ${WT.map(w=>{const c=WC[w];return`<button onclick="FD.workType='${w}';render()" style="padding:6px 12px;border-radius:99px;border:1px solid ${(f.workType||'')=== w?c:'#ffffff12'};background:${(f.workType||'')=== w?c+'20':'#ffffff05'};color:${(f.workType||'')=== w?c:'#555570'};font-size:11px;font-weight:600;cursor:pointer;font-family:inherit">${w}</button>`;}).join('')}
   </div>
 
-  <label class="form-label">지라 코드</label>
-  <input class="form-input" id="fCode" placeholder="LGS-123" value="${esc(f.code||'')}">
+  <label class="fl">지라 코드</label>
+  <input class="fi" id="fCode" placeholder="LGS-123" value="${esc(f.code||'')}">
 
-  <label class="form-label">유형</label>
-  <div class="type-btns">
-    ${TYPES.map(t=>`<button class="type-btn" onclick="setType('${t}')" style="${(f.type||'Task')===t?`border-color:${TC[t]};background:${TC[t]}18;color:${TC[t]}`:''}">${t}</button>`).join('')}
+  <label class="fl">유형</label>
+  <div class="tbtns">
+    ${TYPES.map(t=>`<button class="tbtn" onclick="setType('${t}')" style="${(f.type||'Task')===t?`border-color:${TC[t]};background:${TC[t]}18;color:${TC[t]}`:''}">${t}</button>`).join('')}
   </div>
 
-  <label class="form-label">Summary</label>
-  <input class="form-input" id="fSummary" placeholder="업무 내용" value="${esc(f.summary||'')}">
+  <label class="fl">Summary</label>
+  <input class="fi" id="fSum" placeholder="업무 내용" value="${esc(f.summary||'')}">
 
-  <label class="form-label">Assignee <span style="color:#444460;font-weight:400;text-transform:none;font-size:10px">기획 담당 1명</span></label>
+  <label class="fl">Assignee <span style="color:#444460;font-weight:400;text-transform:none;font-size:10px">기획 담당 1명</span></label>
   <div style="display:flex;gap:8px;margin-bottom:13px">
-    ${[ME, TEAM].map(m=>`<button onclick="fd.assignee='${m}';render()" style="flex:1;padding:10px;border-radius:9px;border:1px solid ${(f.assignee||ME)===m?'#c8a84b':'#ffffff10'};background:${(f.assignee||ME)===m?'#c8a84b18':'#ffffff04'};color:${(f.assignee||ME)===m?'#c8a84b':'#555570'};font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s">${m}${m===ME?' (나)':' (책임님)'}</button>`).join('')}
+    ${[ME,TEAM].map(m=>`<button onclick="FD.assignee='${m}';render()" style="flex:1;padding:10px;border-radius:9px;border:1px solid ${(f.assignee||ME)===m?'var(--gold)':'#ffffff10'};background:${(f.assignee||ME)===m?'#c8a84b18':'#ffffff04'};color:${(f.assignee||ME)===m?'var(--gold)':'#555570'};font-size:13px;font-weight:600;cursor:pointer;font-family:inherit">${m}${m===ME?' (나)':' (책임님)'}</button>`).join('')}
   </div>
 
-  <label class="form-label">작업자 <span style="color:#444460;font-weight:400;text-transform:none;font-size:10px">복수 선택 가능</span></label>
-  <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:13px">
-    ${TEAM_ROLES.map(role=>{
-      const roleColors={기획:'#c8a84b',디자인:'#e96d9b',퍼블:'#00c2d4',개발:'#3d9be9'};
-      const rc=roleColors[role];
-      const workers=f.workers||[];
-      return `<div style="background:#ffffff04;border:1px solid #ffffff08;border-radius:10px;padding:10px 12px">
-        <div style="font-size:10px;font-weight:700;color:${rc};letter-spacing:1px;margin-bottom:8px">${role}팀</div>
-        <div style="display:flex;gap:6px;flex-wrap:wrap">
-          ${TEAM_MEMBERS[role].map(m=>{
-            const sel=workers.includes(m);
-            return`<button onclick="toggleWorker('${m}')" style="padding:6px 12px;border-radius:99px;border:1px solid ${sel?rc:'#ffffff12'};background:${sel?rc+'20':'#ffffff05'};color:${sel?rc:'#555570'};font-size:11px;font-weight:${sel?700:400};cursor:pointer;font-family:inherit;transition:all .2s">${m}${sel?' ✓':''}</button>`;
-          }).join('')}
-        </div>
-      </div>`;
-    }).join('')}
-  </div>
-  ${(f.workers||[]).length?`<div style="font-size:11px;color:#555570;background:#ffffff05;border-radius:8px;padding:8px 12px;margin-bottom:13px">선택된 작업자: <span style="color:#e4e4f0;font-weight:600">${(f.workers||[]).join(', ')}</span></div>`:''}
+  <label class="fl">작업자 & 팀별 일정 <span style="color:#444460;font-weight:400;text-transform:none;font-size:10px">팀원 선택 → 일정 입력</span></label>
+  ${teamBlocks}
 
-  <div class="form-row">
-    <div>
-      <label class="form-label">상태</label>
-      <select class="form-input" id="fSts">${STS.map(s=>`<option${(f.status||'To Do')===s?' selected':''}>${s}</option>`).join('')}</select>
-    </div>
-    <div>
-      <label class="form-label">시작일</label>
-      <input type="date" class="form-input" id="fStart" value="${f.startDate||today()}" onchange="syncFd();render()">
-    </div>
-  </div>
-
-  <label class="form-label">마감일 <span style="color:#444460;text-transform:none;font-weight:400;font-size:10px">(비우면 자동 산정)</span></label>
-  <input type="date" class="form-input" id="fDue" value="${f.dueDate||''}">
-
-  ${est?`<div class="hint-box">📊 <strong>${esc(f.assignee||ME)}</strong>의 <strong>${f.type}</strong> 평균 <strong>${est}일</strong> → 예상 마감 <strong>${estDate?fmt(estDate):'-'}</strong></div>`:''}
-
-  <label class="form-label">디자인 업무</label>
-  <div class="type-btns">
-    ${['아님','디자인 포함'].map(v=>`<button class="type-btn" onclick="fd.isDesign=${v==='디자인 포함'};render()" style="${(!!f.isDesign)===(v==='디자인 포함')?'border-color:#7c6fcd;background:#7c6fcd18;color:#7c6fcd':''}">${v}</button>`).join('')}
-  </div>
-
-  ${isEdit&&f.originalAssignee===TEAM?`
-  <label class="form-label">이관 처리</label>
-  <div class="type-btns">
-    <button class="type-btn" onclick="confirmTransfer('${editId}')" style="border-color:#3ecf8e;background:#3ecf8e18;color:#3ecf8e">✅ 이관 확인 처리 (알림 제거)</button>
+  ${oStart||oEnd?`<div style="background:#ffffff05;border:1px solid var(--bd);border-radius:9px;padding:10px 14px;margin-bottom:13px;font-size:11px;display:flex;gap:14px;flex-wrap:wrap;align-items:center">
+    <span style="color:#444460">전체 기간</span>
+    <span style="color:var(--tx);font-weight:600">${fmt(oStart)} → ${fmt(oEnd)}</span>
+    ${oStart&&oEnd?`<span style="color:var(--gold);font-weight:600">총 ${diffD(oStart,oEnd)}일</span>`:''}
+    ${hasDesign?'<span class="tagr" style="background:#e96d9b18;color:#e96d9b">🎨 디자인 포함</span>':''}
   </div>`:''}
 
-  <label class="form-label">메모</label>
-  <textarea class="form-input" id="fMemo" rows="3">${esc(f.memo||'')}</textarea>
+  <label class="fl">상태</label>
+  <select class="fi" id="fSts">${STS.map(s=>`<option${(f.status||'To Do')===s?' selected':''}>${s}</option>`).join('')}</select>
+
+  ${isEdit&&f.originalAssignee===TEAM?`<button onclick="confirmTrans('${EID}')" style="width:100%;border:1px solid #3ecf8e30;background:#3ecf8e0e;border-radius:9px;color:var(--green);padding:10px;font-size:12px;cursor:pointer;font-family:inherit;font-weight:600;margin-bottom:13px">✅ 이관 확인 처리 (알림 제거)</button>`:''}
+
+  <label class="fl">메모</label>
+  <textarea class="fi" id="fMemo" rows="3">${esc(f.memo||'')}</textarea>
 
   <div class="btn-row">
-    <button class="btn" onclick="cancelForm()">취소</button>
-    <button class="btn gold" onclick="submitForm()">${isEdit?'수정완료':'등록'}</button>
+    <button class="btn" onclick="cancelF()">취소</button>
+    <button class="btn gold" onclick="submitF()">${isEdit?'수정완료':'등록'}</button>
   </div>
 </div>`;
 }
 
-// ── DESIGN ───────────────────────────────────────────
-function renderDesign() {
-  const steps=['① 키워드','② 무드 & 컬러','③ 브리프 완성'];
-  const stepBar=`<div style="display:flex;gap:0;margin-bottom:22px;background:#0f0f1c;border:1px solid var(--border);border-radius:12px;overflow:hidden">
-    ${steps.map((s,i)=>`<div onclick="designStep=${i+1};render()" style="flex:1;padding:10px 8px;text-align:center;font-size:11px;font-weight:${designStep===i+1?700:400};cursor:pointer;background:${designStep===i+1?'#7c6fcd18':'transparent'};color:${designStep===i+1?'#7c6fcd':'#444460'};border-right:${i<2?'1px solid var(--border)':'none'};transition:all .2s">${s}</div>`).join('')}
-  </div>`;
-
-  if(designStep===1) return stepBar+renderDesignStep1();
-  if(designStep===2) return stepBar+renderDesignStep2();
-  return stepBar+renderDesignStep3();
+// ─── DESIGN ───────────────────────────────────────────────────
+// (Design Engine data)
+const MOODS=[{key:'premium',label:'프리미엄',icon:'✨',desc:'고급스럽고 절제된'},{key:'warm',label:'웜/라이프스타일',icon:'🌿',desc:'따뜻하고 일상적인'},{key:'bold',label:'볼드/강렬',icon:'⚡',desc:'강하고 임팩트있는'},{key:'clean',label:'클린/미니멀',icon:'◻',desc:'깔끔하고 심플한'},{key:'playful',label:'펀/캐주얼',icon:'🎉',desc:'밝고 친근한'},{key:'seasonal',label:'시즌/감성',icon:'🍂',desc:'계절감 있는'}];
+const CDIRS=[{key:'dark',label:'다크톤',cols:['#1a1a2e','#16213e','#0f3460']},{key:'warm',label:'웜톤',cols:['#f5e6d3','#e8c9a0','#d4956a']},{key:'cool',label:'쿨톤',cols:['#e8f4fd','#b3d9f2','#4a9eca']},{key:'vivid',label:'비비드',cols:['#ff4757','#ffd32a','#3742fa']},{key:'pastel',label:'파스텔',cols:['#ffeaa7','#dfe6e9','#fd79a8']},{key:'mono',label:'모노크롬',cols:['#f5f5f5','#888888','#1a1a1a']},{key:'earth',label:'어스톤',cols:['#8B6914','#A0785A','#C4A882']},{key:'neon',label:'네온/팝',cols:['#00ff88','#ff0080','#7700ff']}];
+const TONES=['밝고 경쾌하게','고급스럽고 무게감 있게','친근하고 따뜻하게','강렬하고 임팩트있게','감성적이고 서정적으로','심플하고 직관적으로'];
+const KMAP=[
+  {kw:['냉장고','에어컨','세탁기','건조기','청소기','공기청정기'],mood:'premium',color:'dark',refs:['LG 시그니처 — 블랙 배경, 제품 단독 조명 연출','기능 인포그래픽 — 핵심 스펙 수치를 타이포로 강조'],tip:'가전 프리미엄은 어두운 배경에 제품 디테일을 강조하는 것이 효과적이에요.'},
+  {kw:['봄','spring','새학기','3월','4월','5월'],mood:'warm',color:'pastel',refs:['파스텔 그라데이션 + 플라워/그린 오브젝트','화이트/크림 베이스에 포인트 컬러'],tip:'봄 시즌은 파스텔 + 자연물 오브젝트 조합이 클릭률이 높아요.'},
+  {kw:['여름','summer','6월','7월','8월','쿨','시원'],mood:'bold',color:'cool',refs:['쿨톤 블루/민트 배경 — 시원함 직관적 전달','물/얼음/바람 모션 오브젝트 활용'],tip:'여름 캠페인은 쿨한 색감 + 시원함을 연상시키는 오브젝트가 핵심이에요.'},
+  {kw:['가을','autumn','fall','10월','11월'],mood:'seasonal',color:'earth',refs:['어스톤 배경 — 브라운/오렌지/베이지 조합','낙엽/따뜻한 빛 오브젝트로 감성 연출'],tip:'가을 캠페인은 어스톤 + 따뜻한 감성 이미지가 공감대를 높여요.'},
+  {kw:['겨울','winter','크리스마스','12월','1월','연말'],mood:'premium',color:'dark',refs:['딥 네이비/블랙 — 골드/실버 포인트','연말 감성 — 빛/반짝임 이펙트 적극 활용'],tip:'연말 캠페인은 골드·실버 포인트 컬러로 특별함을 강조하세요.'},
+  {kw:['할인','세일','혜택','특가','이벤트','프로모션'],mood:'bold',color:'vivid',refs:['레드/옐로우 — 가격/혜택 수치 최대 강조','CTA 면적 확대, 혜택 텍스트 계층 명확히'],tip:'혜택 강조 배너는 수치를 크게, CTA를 명확하게. 복잡한 정보는 리스트로.'},
+  {kw:['신제품','신규','출시','런칭','new'],mood:'clean',color:'mono',refs:['화이트 배경 — 제품 단독 부각','티저 형식 — 궁금증 유발 카피 활용'],tip:'신제품 런칭은 제품 자체에 집중하는 클린한 구성이 신뢰감을 높여요.'},
+  {kw:['키즈','어린이','아이','child','kids'],mood:'playful',color:'pastel',refs:['밝고 채도 높은 컬러 — 펀하고 친근한 분위기','캐릭터/일러스트 활용'],tip:'키즈 타겟은 원색 계열의 밝고 활기찬 톤이 어필해요.'},
+  {kw:['프리미엄','럭셔리','하이엔드','고급'],mood:'premium',color:'dark',refs:['블랙/딥그레이 — 절제된 레이아웃','골드 포인트 컬러 — 고급감 부각'],tip:'프리미엄 포지셔닝은 여백과 절제가 핵심이에요. 정보를 덜어내세요.'},
+  {kw:['가족','홈','인테리어','라이프스타일','집'],mood:'warm',color:'warm',refs:['따뜻한 인테리어 배경 + 가족/생활 연출','제품이 일상 속에 자연스럽게 녹아드는 구도'],tip:'라이프스타일 이미지는 실제 생활환경을 연출할수록 공감도가 높아요.'},
+];
+function getDRec(kws){const k=kws.join(' ').toLowerCase();for(const m of KMAP){if(m.kw.some(w=>k.includes(w)))return m;}return null;}
+function gBriefText(b){
+  const ml=b.moods.map(k=>MOODS.find(m=>m.key===k)?.label||k).join(', ')||'미정';
+  const cl=b.colors.map(k=>CDIRS.find(c=>c.key===k)?.label||k).join(', ')||'미정';
+  const tm={banner:'배너',keyvisual:'Key Visual',detail:'상세페이지'};
+  return `📋 디자인 브리프\n━━━━━━━━━━━━━━━━━━━━━━\n캠페인명: ${b.campaignName||'(미입력)'}\n산출물: ${tm[b.outputType]||b.outputType}\n타겟: ${b.target||'(미입력)'}\n마감일: ${b.deadline||'(미입력)'}\n담당: ${b.assignees.join(', ')||'미정'}\n\n━━━━━━━━━━━━━━━━━━━━━━\n🎨 디자인 방향\n키워드: ${b.keywords.join(', ')||'(미입력)'}\n무드: ${ml}\n컬러: ${cl}\n톤앤매너: ${b.tones.join(', ')||'미정'}\n\n━━━━━━━━━━━━━━━━━━━━━━\n📝 요청사항\n${b.request||'(없음)'}\n━━━━━━━━━━━━━━━━━━━━━━`;
 }
 
-function renderDesignStep1() {
-  const b=designBrief;
-  const rec=getDesignRecs(b.keywords);
-  const kwInput=`<div class="card" style="margin-bottom:14px">
-    <div class="section-label" style="color:#7c6fcd;margin-bottom:12px">🔍 이벤트/캠페인 키워드 입력</div>
-    <div style="font-size:11px;color:#555570;margin-bottom:10px">키워드를 입력하면 어울리는 디자인 방향을 자동으로 추천해드려요</div>
+function rDesign(){
+  const steps=['① 키워드','② 무드 & 컬러','③ 브리프 완성'];
+  const bar=`<div class="step-bar">${steps.map((s,i)=>`<div class="step-btn${DS===i+1?' on':''}" onclick="DS=${i+1};render()">${s}</div>`).join('')}</div>`;
+  if(DS===1)return bar+rDS1();if(DS===2)return bar+rDS2();return bar+rDS3();
+}
+function rDS1(){
+  const b=DB, rec=getDRec(b.keywords);
+  return `<div class="card" style="margin-bottom:14px">
+    <div class="sl" style="color:#7c6fcd;margin-bottom:12px">🔍 이벤트/캠페인 키워드</div>
+    <div style="font-size:11px;color:#555570;margin-bottom:10px">키워드를 입력하면 어울리는 디자인 방향을 추천해드려요</div>
     <div style="display:flex;gap:8px;margin-bottom:12px">
-      <input class="form-input" id="kwInput" style="margin-bottom:0;flex:1" placeholder="예: 여름, 에어컨, 프리미엄, 할인..." value="${b.keywords.join(', ')}">
-      <button onclick="applyKeywords()" class="btn gold" style="border-radius:9px;padding:0 16px;flex-shrink:0">추천</button>
+      <input class="fi" id="kwI" style="margin-bottom:0;flex:1" placeholder="예: 여름, 에어컨, 프리미엄..." value="${b.keywords.join(', ')}">
+      <button onclick="applyKw()" class="btn gold" style="border-radius:9px;padding:0 16px;flex-shrink:0">추천</button>
     </div>
     <div style="display:flex;gap:6px;flex-wrap:wrap">
-      ${['봄','여름','가을','겨울','신제품','할인/혜택','프리미엄','라이프스타일','키즈','신규출시'].map(k=>`<button onclick="addKeyword('${k}')" style="padding:5px 12px;border-radius:99px;border:1px solid ${b.keywords.includes(k)?'#7c6fcd':'#ffffff12'};background:${b.keywords.includes(k)?'#7c6fcd18':'#ffffff05'};color:${b.keywords.includes(k)?'#7c6fcd':'#555570'};font-size:11px;cursor:pointer;font-family:inherit">${k}</button>`).join('')}
+      ${['봄','여름','가을','겨울','신제품','할인/혜택','프리미엄','라이프스타일','키즈','신규출시'].map(k=>`<button onclick="togKw('${k}')" style="padding:5px 12px;border-radius:99px;border:1px solid ${b.keywords.includes(k)?'#7c6fcd':'#ffffff12'};background:${b.keywords.includes(k)?'#7c6fcd18':'#ffffff05'};color:${b.keywords.includes(k)?'#7c6fcd':'#555570'};font-size:11px;cursor:pointer;font-family:inherit">${k}</button>`).join('')}
     </div>
-  </div>`;
-
-  const recHtml=rec?`<div style="background:#7c6fcd0a;border:1px solid #7c6fcd20;border-radius:12px;padding:16px;margin-bottom:14px">
-    <div style="font-size:12px;font-weight:700;color:#7c6fcd;margin-bottom:10px">✨ 추천 방향</div>
-    <div style="font-size:12px;color:#aaa;margin-bottom:10px;line-height:1.7;background:#ffffff05;border-radius:8px;padding:10px">💡 ${rec.tip}</div>
-    ${rec.refs.map(r=>`<div style="display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-bottom:1px solid #ffffff06;font-size:12px;color:#888"><span style="color:#7c6fcd;flex-shrink:0">▸</span>${r}</div>`).join('')}
-    <div style="margin-top:12px;display:flex;gap:8px">
-      <button onclick="designBrief.moods=['${rec.mood}'];designBrief.colors=['${rec.color}'];designStep=2;render()" class="btn gold" style="border-radius:9px;flex:1">이 방향으로 진행 →</button>
-    </div>
-  </div>`:'';
-
-  const outputType=`<div class="card" style="margin-bottom:14px">
-    <div class="section-label" style="color:#7c6fcd;margin-bottom:12px">📐 산출물 유형</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
-      ${[{k:'banner',i:'🖼',l:'배너'},{k:'keyvisual',i:'✨',l:'Key Visual'},{k:'detail',i:'📄',l:'상세페이지'}].map(t=>`<div onclick="designBrief.outputType='${t.k}';render()" style="background:${b.outputType===t.k?'#7c6fcd18':' var(--bg)'};border:1px solid ${b.outputType===t.k?'#7c6fcd':'var(--border)'};border-radius:10px;padding:14px;text-align:center;cursor:pointer"><div style="font-size:20px;margin-bottom:5px">${t.i}</div><div style="font-size:12px;font-weight:600;color:${b.outputType===t.k?'#7c6fcd':'#888'}">${t.l}</div></div>`).join('')}
-    </div>
-  </div>`;
-
-  return kwInput+recHtml+outputType+`<button onclick="designStep=2;render()" class="btn gold" style="width:100%;border-radius:11px">다음: 무드 & 컬러 선택 →</button>`;
-}
-
-function renderDesignStep2() {
-  const b=designBrief;
-  const moodHtml=`<div class="card" style="margin-bottom:14px">
-    <div class="section-label" style="color:#7c6fcd;margin-bottom:12px">🎭 무드 선택 <span style="color:#444460;font-size:9px;font-weight:400;text-transform:none">(복수 선택 가능)</span></div>
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
-      ${MOODS.map(m=>{const sel=b.moods.includes(m.key);return`<div onclick="toggleArr('moods','${m.key}')" style="background:${sel?'#7c6fcd18':'var(--bg)'};border:1px solid ${sel?'#7c6fcd':'var(--border)'};border-radius:10px;padding:12px;text-align:center;cursor:pointer;transition:all .2s">
-        <div style="font-size:18px;margin-bottom:4px">${m.icon}</div>
-        <div style="font-size:11px;font-weight:700;color:${sel?'#7c6fcd':'#888'}">${m.label}</div>
-        <div style="font-size:10px;color:#444460;margin-top:2px">${m.desc}</div>
-      </div>`;}).join('')}
-    </div>
-  </div>`;
-
-  const colorHtml=`<div class="card" style="margin-bottom:14px">
-    <div class="section-label" style="color:#7c6fcd;margin-bottom:12px">🎨 컬러 방향 <span style="color:#444460;font-size:9px;font-weight:400;text-transform:none">(복수 선택 가능)</span></div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-      ${COLOR_DIRS.map(c=>{const sel=b.colors.includes(c.key);return`<div onclick="toggleArr('colors','${c.key}')" style="background:${sel?'#ffffff08':'var(--bg)'};border:2px solid ${sel?'#ffffff30':'var(--border)'};border-radius:10px;padding:10px 12px;cursor:pointer;display:flex;align-items:center;gap:10px;transition:all .2s">
-        <div style="display:flex;gap:3px">${c.colors.map(cl=>`<div style="width:16px;height:16px;border-radius:3px;background:${cl}"></div>`).join('')}</div>
-        <span style="font-size:12px;font-weight:600;color:${sel?'#e4e4f0':'#666688'}">${c.label}</span>
-        ${sel?'<span style="margin-left:auto;color:#3ecf8e;font-size:11px">✓</span>':''}
-      </div>`;}).join('')}
-    </div>
-  </div>`;
-
-  const toneHtml=`<div class="card" style="margin-bottom:14px">
-    <div class="section-label" style="color:#7c6fcd;margin-bottom:12px">💬 톤앤매너 <span style="color:#444460;font-size:9px;font-weight:400;text-transform:none">(복수 선택 가능)</span></div>
-    <div style="display:flex;gap:7px;flex-wrap:wrap">
-      ${TONES.map(t=>{const sel=b.tones.includes(t);return`<button onclick="toggleArr('tones','${t}')" style="padding:7px 13px;border-radius:99px;border:1px solid ${sel?'#c8a84b':'#ffffff12'};background:${sel?'#c8a84b18':'#ffffff05'};color:${sel?'#c8a84b':'#555570'};font-size:11px;cursor:pointer;font-family:inherit">${t}</button>`;}).join('')}
-    </div>
-  </div>`;
-
-  return moodHtml+colorHtml+toneHtml+`<div style="display:flex;gap:8px"><button onclick="designStep=1;render()" class="btn" style="border-radius:11px">← 이전</button><button onclick="designStep=3;render()" class="btn gold" style="flex:2;border-radius:11px">다음: 브리프 작성 →</button></div>`;
-}
-
-function renderDesignStep3() {
-  const b=designBrief;
-  const moodLabels=b.moods.map(k=>MOODS.find(m=>m.key===k)?.label||k).join(', ')||'미선택';
-  const colorLabels=b.colors.map(k=>COLOR_DIRS.find(c=>c.key===k)?.label||k).join(', ')||'미선택';
-  const typeMap={banner:'배너',keyvisual:'Key Visual',detail:'상세페이지'};
-
-  const formHtml=`<div class="card" style="margin-bottom:14px">
-    <div class="section-label" style="color:#c8a84b;margin-bottom:14px">📋 브리프 작성</div>
-
-    <label class="form-label">캠페인명</label>
-    <input class="form-input" id="bCampaign" placeholder="예: 2025 여름 에어컨 기획전" value="${esc(b.campaignName)}">
-
-    <label class="form-label">타겟</label>
-    <input class="form-input" id="bTarget" placeholder="예: 30-40대 주부, 신혼부부" value="${esc(b.target)}">
-
-    <label class="form-label">마감일</label>
-    <input type="date" class="form-input" id="bDeadline" value="${b.deadline}">
-
-    <label class="form-label">담당 디자이너</label>
-    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:13px">
-      ${TEAM_MEMBERS['디자인'].map(m=>`<button onclick="toggleArr('assignees','${m}')" style="padding:6px 12px;border-radius:99px;border:1px solid ${b.assignees.includes(m)?'#e96d9b':'#ffffff12'};background:${b.assignees.includes(m)?'#e96d9b18':'#ffffff05'};color:${b.assignees.includes(m)?'#e96d9b':'#555570'};font-size:11px;cursor:pointer;font-family:inherit">${m}</button>`).join('')}
-    </div>
-
-    <label class="form-label">추가 요청사항</label>
-    <textarea class="form-input" id="bRequest" rows="3" placeholder="디자이너에게 전달하고 싶은 추가 내용...">${esc(b.request)}</textarea>
-
-    <div style="background:#ffffff05;border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:14px;font-size:11px;color:#555570;line-height:1.7">
-      <div style="color:#888;margin-bottom:5px;font-weight:600">선택된 방향 요약</div>
-      <div>산출물: <span style="color:#7c6fcd">${typeMap[b.outputType]||b.outputType}</span></div>
-      <div>키워드: <span style="color:#3d9be9">${b.keywords.join(', ')||'없음'}</span></div>
-      <div>무드: <span style="color:#e96d9b">${moodLabels}</span></div>
-      <div>컬러: <span style="color:#c8a84b">${colorLabels}</span></div>
-      <div>톤앤매너: <span style="color:#3ecf8e">${b.tones.join(', ')||'없음'}</span></div>
-    </div>
-
-    <button onclick="syncBriefInputs();generateBrief()" class="btn gold" style="width:100%;border-radius:11px;margin-bottom:8px">✍️ 브리프 생성</button>
-  </div>`;
-
-  const histHtml=S.designHistory&&S.designHistory.length?`
-    <div style="margin-top:20px">
-      <div class="section-label" style="color:#333350;margin-bottom:8px">📁 브리프 히스토리 (${S.designHistory.length}건)</div>
-      ${S.designHistory.slice().reverse().slice(0,5).map((h,i)=>`<div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:8px">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
-          <span style="font-size:12px;font-weight:600;color:#e4e4f0">${esc(h.campaignName||'(제목없음)')}</span>
-          <span style="font-size:10px;color:#444460">${h.date}</span>
-        </div>
-        <div style="font-size:11px;color:#555570;display:flex;gap:8px;flex-wrap:wrap">
-          <span style="color:#7c6fcd">${h.outputType}</span>
-          <span>${h.moods}</span>
-          <span>${h.colors}</span>
-        </div>
-        <button onclick="copyBrief(${i})" style="margin-top:8px;background:#ffffff08;border:1px solid var(--border);border-radius:6px;color:#888;padding:4px 10px;font-size:10px;cursor:pointer;font-family:inherit">📋 복사</button>
-      </div>`).join('')}
-    </div>`:'';
-
-  const briefPreview=S.lastBrief?`<div id="briefOut" style="background:#07070e;border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:14px;font-family:'Noto Sans KR',monospace;font-size:12px;line-height:1.8;color:#aaa;white-space:pre-wrap">${esc(S.lastBrief)}</div>
-    <div style="display:flex;gap:8px;margin-bottom:14px">
-      <button onclick="copyLastBrief()" class="btn blue" style="flex:1;border-radius:9px">📋 클립보드 복사</button>
-      <button onclick="S.lastBrief=null;save();render()" style="background:transparent;border:1px solid var(--border);border-radius:9px;color:#444460;padding:10px 14px;cursor:pointer;font-family:inherit;font-size:12px">닫기</button>
-    </div>`:'';
-
-  return formHtml+briefPreview+`<button onclick="designStep=2;render()" class="btn" style="width:100%;border-radius:11px;margin-bottom:14px">← 이전으로</button>`+histHtml;
-}
-
-function toggleArr(field, val) {
-  const arr=designBrief[field];
-  const idx=arr.indexOf(val);
-  if(idx>-1) arr.splice(idx,1); else arr.push(val);
-  render();
-}
-
-function addKeyword(k) {
-  if(!designBrief.keywords.includes(k)) designBrief.keywords.push(k);
-  else designBrief.keywords=designBrief.keywords.filter(x=>x!==k);
-  render();
-}
-
-function applyKeywords() {
-  const el=document.getElementById('kwInput');
-  if(!el) return;
-  designBrief.keywords=el.value.split(/[,\s]+/).map(k=>k.trim()).filter(Boolean);
-  const rec=getDesignRecs(designBrief.keywords);
-  if(rec){designBrief.moods=[rec.mood];designBrief.colors=[rec.color];}
-  render();
-}
-
-function syncBriefInputs() {
-  const m={bCampaign:'campaignName',bTarget:'target',bDeadline:'deadline',bRequest:'request'};
-  Object.entries(m).forEach(([id,key])=>{const el=document.getElementById(id);if(el)designBrief[key]=el.value;});
-}
-
-function generateBrief() {
-  syncBriefInputs();
-  const text=genBriefText(designBrief);
-  S.lastBrief=text;
-  if(!S.designHistory) S.designHistory=[];
-  const typeMap={banner:'배너',keyvisual:'Key Visual',detail:'상세페이지'};
-  S.designHistory.push({
-    date:new Date().toLocaleDateString('ko-KR'),
-    campaignName:designBrief.campaignName,
-    outputType:typeMap[designBrief.outputType]||designBrief.outputType,
-    moods:designBrief.moods.map(k=>MOODS.find(m=>m.key===k)?.label||k).join(', '),
-    colors:designBrief.colors.map(k=>COLOR_DIRS.find(c=>c.key===k)?.label||k).join(', '),
-    text
-  });
-  if(S.designHistory.length>20) S.designHistory=S.designHistory.slice(-20);
-  save(); render();
-}
-
-function copyLastBrief() {
-  if(!S.lastBrief) return;
-  navigator.clipboard.writeText(S.lastBrief).then(()=>alert('클립보드에 복사됐어요! 메신저/메일에 바로 붙여넣기 하세요 😊')).catch(()=>{
-    const el=document.getElementById('briefOut');
-    if(el){const r=document.createRange();r.selectNode(el);window.getSelection().removeAllRanges();window.getSelection().addRange(r);document.execCommand('copy');alert('복사됐어요!');}
-  });
-}
-
-function copyBrief(revIdx) {
-  if(!S.designHistory) return;
-  const h=S.designHistory.slice().reverse()[revIdx];
-  if(!h) return;
-  navigator.clipboard.writeText(h.text).then(()=>alert('복사됐어요!')).catch(()=>{});
-}
-
-function toggleDesign(k){designChecks[k]=!designChecks[k];const el=document.getElementById(`dck-${k}`);if(el){el.style.color=designChecks[k]?'#3ecf8e':'#888';el.querySelector('span').textContent=designChecks[k]?'●':'○';el.querySelector('span').style.color=designChecks[k]?'#3ecf8e':'#333350';}}
-
-// ── IMPACT ───────────────────────────────────────────
-function renderImpact() {
-  const histHtml=S.impactHistory.slice().reverse().slice(0,5).map(h=>`
-    <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 16px;margin-bottom:8px;font-size:12px">
-      <div style="color:#c8a84b;font-weight:600;margin-bottom:3px">${h.date}</div>
-      <div style="color:#888;margin-bottom:6px">${esc(h.input)}</div>
-      <div style="display:flex;gap:5px;flex-wrap:wrap">${(h.hits||[]).map(x=>`<span class="tag tag-round" style="background:${x.risk==='high'?'#f164640e':x.risk==='medium'?'#f59e0b0e':'#3ecf8e0e'};color:${x.risk==='high'?'#f16464':x.risk==='medium'?'#f59e0b':'#3ecf8e'}">${x.area}</span>`).join('')}</div>
-    </div>`).join('');
-
-  const resultHtml=impactResult.length?impactResult.map(r=>`
-    <div class="impact-result ${r.risk}">
-      <div style="font-size:13px;font-weight:700;color:${r.risk==='high'?'#f16464':r.risk==='medium'?'#f59e0b':'#3ecf8e'};margin-bottom:6px">${r.risk==='high'?'🔴 높은 영향':r.risk==='medium'?'🟡 중간 영향':'🟢 낮은 영향'} · ${r.area}</div>
-      <div style="font-size:12px;color:#888;line-height:1.5">${r.desc}</div>
-      <div style="font-size:10px;color:#444460;margin-top:5px">감지 키워드: ${(r.matched||[]).join(', ')}</div>
-    </div>`).join('')
-    :(impactInput?'<div class="hint-box">✅ 영향도가 감지되지 않았어요. 내용을 좀 더 구체적으로 입력해주세요.</div>':'');
-
-  return `<div class="card" style="margin-bottom:16px">
-    <div class="section-label" style="color:#3d9be9;margin-bottom:10px">🔍 Admin 수정 → Front 영향도 분석</div>
-    <div class="info-box">Admin에서 수정할 내용을 입력하면 프론트 영향 항목을 자동으로 분석해드려요.</div>
-    <label class="form-label">수정 내용 입력</label>
-    <textarea class="form-input" id="impactTxt" rows="4" placeholder="예: 상품 카테고리 분류 기준 변경, 가격 정책 업데이트...">${esc(impactInput)}</textarea>
-    <button class="btn gold" onclick="runImpact()" style="width:100%">영향도 분석하기</button>
   </div>
-  ${resultHtml?`<div style="margin-bottom:16px"><div class="section-label" style="color:#f16464;margin-bottom:8px">분석 결과</div>${resultHtml}</div>`:''}
-  ${S.impactHistory.length?`<div><div class="section-label" style="color:#333350;margin-bottom:8px">최근 분석 이력</div>${histHtml}</div>`:''}`;
+  ${rec?`<div style="background:#7c6fcd0a;border:1px solid #7c6fcd20;border-radius:12px;padding:16px;margin-bottom:14px">
+    <div style="font-size:12px;font-weight:700;color:#7c6fcd;margin-bottom:10px">✨ 추천 방향</div>
+    <div style="font-size:12px;color:#aaa;margin-bottom:10px;background:#ffffff05;border-radius:8px;padding:10px;line-height:1.7">💡 ${rec.tip}</div>
+    ${rec.refs.map(r=>`<div style="display:flex;gap:8px;padding:7px 0;border-bottom:1px solid #ffffff06;font-size:12px;color:#888"><span style="color:#7c6fcd">▸</span>${r}</div>`).join('')}
+    <button onclick="DB.moods=['${rec.mood}'];DB.colors=['${rec.color}'];DS=2;render()" class="btn gold" style="width:100%;border-radius:9px;margin-top:12px">이 방향으로 진행 →</button>
+  </div>`:''}
+  <div class="card" style="margin-bottom:14px">
+    <div class="sl" style="color:#7c6fcd;margin-bottom:12px">📐 산출물 유형</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+      ${[{k:'banner',i:'🖼',l:'배너'},{k:'keyvisual',i:'✨',l:'Key Visual'},{k:'detail',i:'📄',l:'상세페이지'}].map(t=>`<div onclick="DB.outputType='${t.k}';render()" style="background:${b.outputType===t.k?'#7c6fcd18':'var(--bg)'};border:1px solid ${b.outputType===t.k?'#7c6fcd':'var(--bd)'};border-radius:10px;padding:14px;text-align:center;cursor:pointer"><div style="font-size:20px;margin-bottom:5px">${t.i}</div><div style="font-size:12px;font-weight:600;color:${b.outputType===t.k?'#7c6fcd':'#888'}">${t.l}</div></div>`).join('')}
+    </div>
+  </div>
+  <button onclick="DS=2;render()" class="btn gold" style="width:100%;border-radius:11px">다음: 무드 & 컬러 →</button>`;
+}
+function rDS2(){
+  const b=DB;
+  return `<div class="card" style="margin-bottom:14px">
+    <div class="sl" style="color:#7c6fcd;margin-bottom:12px">🎭 무드 <span style="font-weight:400;text-transform:none;font-size:9px;color:#444460">복수 선택</span></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+      ${MOODS.map(m=>`<div onclick="togArr('moods','${m.key}')" style="background:${b.moods.includes(m.key)?'#7c6fcd18':'var(--sf)'};border:1px solid ${b.moods.includes(m.key)?'#7c6fcd':'var(--bd)'};border-radius:10px;padding:12px;text-align:center;cursor:pointer">
+        <div style="font-size:18px;margin-bottom:4px">${m.icon}</div>
+        <div style="font-size:11px;font-weight:700;color:${b.moods.includes(m.key)?'#7c6fcd':'#888'}">${m.label}</div>
+        <div style="font-size:10px;color:#444460;margin-top:2px">${m.desc}</div>
+      </div>`).join('')}
+    </div>
+  </div>
+  <div class="card" style="margin-bottom:14px">
+    <div class="sl" style="color:#7c6fcd;margin-bottom:12px">🎨 컬러 방향 <span style="font-weight:400;text-transform:none;font-size:9px;color:#444460">복수 선택</span></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      ${CDIRS.map(c=>`<div onclick="togArr('colors','${c.key}')" style="background:${b.colors.includes(c.key)?'#ffffff08':'var(--bg)'};border:2px solid ${b.colors.includes(c.key)?'#ffffff30':'var(--bd)'};border-radius:10px;padding:10px 12px;cursor:pointer;display:flex;align-items:center;gap:10px">
+        <div style="display:flex;gap:3px">${c.cols.map(x=>`<div style="width:16px;height:16px;border-radius:3px;background:${x}"></div>`).join('')}</div>
+        <span style="font-size:12px;font-weight:600;color:${b.colors.includes(c.key)?'#e4e4f0':'#666688'}">${c.label}</span>
+        ${b.colors.includes(c.key)?`<span style="margin-left:auto;color:var(--green);font-size:11px">✓</span>`:''}
+      </div>`).join('')}
+    </div>
+  </div>
+  <div class="card" style="margin-bottom:14px">
+    <div class="sl" style="color:#7c6fcd;margin-bottom:12px">💬 톤앤매너 <span style="font-weight:400;text-transform:none;font-size:9px;color:#444460">복수 선택</span></div>
+    <div style="display:flex;gap:7px;flex-wrap:wrap">
+      ${TONES.map(t=>`<button onclick="togArr('tones','${t}')" style="padding:7px 13px;border-radius:99px;border:1px solid ${b.tones.includes(t)?'var(--gold)':'#ffffff12'};background:${b.tones.includes(t)?'#c8a84b18':'#ffffff05'};color:${b.tones.includes(t)?'var(--gold)':'#555570'};font-size:11px;cursor:pointer;font-family:inherit">${t}</button>`).join('')}
+    </div>
+  </div>
+  <div style="display:flex;gap:8px">
+    <button onclick="DS=1;render()" class="btn" style="border-radius:11px">← 이전</button>
+    <button onclick="DS=3;render()" class="btn gold" style="flex:2;border-radius:11px">다음: 브리프 작성 →</button>
+  </div>`;
+}
+function rDS3(){
+  const b=DB, tm={banner:'배너',keyvisual:'Key Visual',detail:'상세페이지'};
+  const ml=b.moods.map(k=>MOODS.find(m=>m.key===k)?.label||k).join(', ')||'미선택';
+  const cl=b.colors.map(k=>CDIRS.find(c=>c.key===k)?.label||k).join(', ')||'미선택';
+  return `<div class="card" style="margin-bottom:14px">
+    <div class="sl" style="color:var(--gold);margin-bottom:14px">📋 브리프 작성</div>
+    <label class="fl">캠페인명</label><input class="fi" id="bCamp" placeholder="예: 2025 여름 에어컨 기획전" value="${esc(b.campaignName)}">
+    <label class="fl">타겟</label><input class="fi" id="bTgt" placeholder="예: 30-40대 주부, 신혼부부" value="${esc(b.target)}">
+    <label class="fl">마감일</label><input type="date" class="fi" id="bDL" value="${b.deadline}">
+    <label class="fl">담당 디자이너</label>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:13px">
+      ${MEMBERS['디자인'].map(m=>`<button onclick="togArr('assignees','${m}')" style="padding:6px 12px;border-radius:99px;border:1px solid ${b.assignees.includes(m)?'#e96d9b':'#ffffff12'};background:${b.assignees.includes(m)?'#e96d9b18':'#ffffff05'};color:${b.assignees.includes(m)?'#e96d9b':'#555570'};font-size:11px;cursor:pointer;font-family:inherit">${m}</button>`).join('')}
+    </div>
+    <label class="fl">추가 요청사항</label>
+    <textarea class="fi" id="bReq" rows="3" placeholder="디자이너에게 전달할 추가 내용...">${esc(b.request)}</textarea>
+    <div style="background:#ffffff05;border:1px solid var(--bd);border-radius:10px;padding:12px;margin-bottom:14px;font-size:11px;color:#555570;line-height:1.8">
+      <div style="color:#888;font-weight:600;margin-bottom:4px">선택 요약</div>
+      <div>산출물:<span style="color:#7c6fcd;margin-left:5px">${tm[b.outputType]}</span> · 키워드:<span style="color:var(--blue);margin-left:5px">${b.keywords.join(', ')||'없음'}</span></div>
+      <div>무드:<span style="color:#e96d9b;margin-left:5px">${ml}</span> · 컬러:<span style="color:var(--gold);margin-left:5px">${cl}</span></div>
+      ${b.tones.length?`<div>톤앤매너:<span style="color:var(--green);margin-left:5px">${b.tones.join(', ')}</span></div>`:''}
+    </div>
+    <button onclick="syncB();genBrief()" class="btn gold" style="width:100%;border-radius:11px;margin-bottom:8px">✍️ 브리프 생성</button>
+  </div>
+  ${S.lastBrief?`<div style="background:#07070e;border:1px solid var(--bd);border-radius:12px;padding:16px;margin-bottom:10px;font-size:12px;line-height:1.8;color:#aaa;white-space:pre-wrap">${esc(S.lastBrief)}</div>
+  <div style="display:flex;gap:8px;margin-bottom:14px">
+    <button onclick="cpBrief()" class="btn blue" style="flex:1;border-radius:9px">📋 클립보드 복사</button>
+    <button onclick="S.lastBrief=null;save();render()" style="background:transparent;border:1px solid var(--bd);border-radius:9px;color:#444460;padding:10px 14px;cursor:pointer;font-family:inherit;font-size:12px">닫기</button>
+  </div>`:''}
+  <button onclick="DS=2;render()" class="btn" style="width:100%;border-radius:11px;margin-bottom:14px">← 이전</button>
+  ${S.designHistory.length?`<div><div class="sl" style="color:#333350;margin-bottom:8px">📁 브리프 히스토리</div>
+    ${S.designHistory.slice().reverse().slice(0,5).map((h,i)=>`<div style="background:var(--sf);border:1px solid var(--bd);border-radius:10px;padding:12px 14px;margin-bottom:8px">
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:12px;font-weight:600">${esc(h.campaignName||'(제목없음)')}</span><span style="font-size:10px;color:#444460">${h.date}</span></div>
+      <div style="font-size:11px;color:#555570">${h.outputType} · ${h.moods} · ${h.colors}</div>
+      <button onclick="cpHistBrief(${i})" style="margin-top:7px;background:#ffffff08;border:1px solid var(--bd);border-radius:6px;color:#888;padding:4px 10px;font-size:10px;cursor:pointer;font-family:inherit">📋 복사</button>
+    </div>`).join('')}
+  </div>`:''}`;
 }
 
+// ─── IMPACT ───────────────────────────────────────────────────
+const IRULES=[
+  {kw:['상품','product','item','카테고리'],area:'상품 목록/상세',risk:'high',desc:'상품 데이터 구조 변경 시 프론트 렌더링 오류 가능'},
+  {kw:['가격','price','할인','discount','프로모션'],area:'가격 표시 영역',risk:'high',desc:'PLP/PDP 가격 UI, 장바구니 금액 계산 영향'},
+  {kw:['배너','banner','이미지','image','visual'],area:'배너/비주얼',risk:'medium',desc:'배너 노출 조건, 이미지 URL 경로 확인 필요'},
+  {kw:['메뉴','menu','gnb','lnb','nav'],area:'GNB/LNB 메뉴',risk:'high',desc:'전체 페이지 내비게이션 구조 영향'},
+  {kw:['회원','member','user','등급','포인트'],area:'마이페이지/회원',risk:'medium',desc:'회원 등급 표시, 포인트 UI 영향'},
+  {kw:['주문','order','장바구니','cart','결제','payment'],area:'주문/결제 플로우',risk:'high',desc:'결제 프로세스 전체 영향 — QA 필수'},
+  {kw:['팝업','popup','modal','레이어'],area:'팝업/모달',risk:'medium',desc:'노출 조건, z-index, 이벤트 트리거 확인'},
+  {kw:['검색','search','필터','filter','sort'],area:'검색/필터 UI',risk:'medium',desc:'검색 결과, 필터 옵션 변경 영향'},
+  {kw:['footer','헤더','header','공통'],area:'공통 영역',risk:'high',desc:'전 페이지 공통 — 모든 페이지 영향'},
+  {kw:['api','endpoint','url','파라미터'],area:'API 연동',risk:'high',desc:'API 변경 시 프론트 전면 점검 필요'},
+  {kw:['텍스트','text','문구','copy','라벨'],area:'UI 텍스트',risk:'low',desc:'정적 문구 변경은 영향 낮음'},
+  {kw:['이벤트','event','기획전','campaign'],area:'이벤트/기획전',risk:'medium',desc:'노출 조건, 시작/종료 로직 확인'},
+  {kw:['재고','stock','품절','soldout'],area:'재고/품절 표시',risk:'medium',desc:'PLP/PDP 재고 UI, 장바구니 버튼 상태 영향'},
+];
+function rImpact(){
+  const hist=S.impactHistory.slice().reverse().slice(0,5).map(h=>`<div style="background:var(--sf);border:1px solid var(--bd);border-radius:10px;padding:12px 16px;margin-bottom:8px;font-size:12px">
+    <div style="color:var(--gold);font-weight:600;margin-bottom:3px">${h.date}</div>
+    <div style="color:#888;margin-bottom:5px">${esc(h.input)}</div>
+    <div style="display:flex;gap:5px;flex-wrap:wrap">${(h.hits||[]).map(x=>`<span class="tagr" style="background:${x.risk==='high'?'#f164640e':x.risk==='medium'?'#f59e0b0e':'#3ecf8e0e'};color:${x.risk==='high'?'#f16464':x.risk==='medium'?'#f59e0b':'#3ecf8e'}">${x.area}</span>`).join('')}</div>
+  </div>`).join('');
+  const res=IR.length?IR.map(r=>`<div class="ir" style="background:${r.risk==='high'?'#f164640e':r.risk==='medium'?'#f59e0b0e':'#3ecf8e0e'};border:1px solid ${r.risk==='high'?'#f164641e':r.risk==='medium'?'#f59e0b1e':'#3ecf8e1e'}">
+    <div style="font-size:13px;font-weight:700;color:${r.risk==='high'?'#f16464':r.risk==='medium'?'#f59e0b':'#3ecf8e'};margin-bottom:6px">${r.risk==='high'?'🔴 높은':'r.risk==='medium'?'🟡 중간':'🟢 낮은'} 영향 · ${r.area}</div>
+    <div style="font-size:12px;color:#888;line-height:1.5">${r.desc}</div>
+    <div style="font-size:10px;color:#444460;margin-top:5px">감지 키워드: ${(r.matched||[]).join(', ')}</div>
+  </div>`).join(''):(II?`<div class="hintbox">✅ 영향도가 감지되지 않았어요. 더 구체적으로 입력해주세요.</div>`:'');
+  return `<div class="card" style="margin-bottom:16px">
+    <div class="sl" style="color:var(--blue);margin-bottom:10px">🔍 Admin 수정 → Front 영향도 분석</div>
+    <div class="infobox">Admin에서 수정할 내용을 입력하면 프론트 영향 항목을 자동으로 분석해드려요.</div>
+    <label class="fl">수정 내용 입력</label>
+    <textarea class="fi" id="impTxt" rows="4" placeholder="예: 상품 카테고리 분류 기준 변경, 가격 정책 업데이트...">${esc(II)}</textarea>
+    <button onclick="runImpact()" class="btn gold" style="width:100%">영향도 분석하기</button>
+  </div>
+  ${res?`<div style="margin-bottom:16px"><div class="sl" style="color:var(--red);margin-bottom:8px">분석 결과</div>${res}</div>`:''}
+  ${S.impactHistory.length?`<div><div class="sl" style="color:#333350;margin-bottom:8px">최근 분석 이력</div>${hist}</div>`:''}`;
+}
 function runImpact(){
-  const el=document.getElementById('impactTxt');if(!el)return;
-  impactInput=el.value.trim();if(!impactInput)return;
-  const lower=impactInput.toLowerCase();
-  impactResult=IMPACT_RULES.filter(r=>r.keywords.some(k=>lower.includes(k))).sort((a,b)=>({high:0,medium:1,low:2}[a.risk]-{high:0,medium:1,low:2}[b.risk]));
-  impactResult=impactResult.map(r=>({...r,matched:r.keywords.filter(k=>lower.includes(k))}));
-  S.impactHistory.push({date:new Date().toLocaleDateString('ko-KR'),input:impactInput,hits:impactResult});
+  const el=document.getElementById('impTxt');if(!el)return;
+  II=el.value.trim();if(!II)return;
+  const low=II.toLowerCase();
+  IR=IRULES.filter(r=>r.kw.some(k=>low.includes(k))).map(r=>({...r,matched:r.kw.filter(k=>low.includes(k))})).sort((a,b)=>({high:0,medium:1,low:2}[a.risk]-{high:0,medium:1,low:2}[b.risk]));
+  S.impactHistory.push({date:new Date().toLocaleDateString('ko-KR'),input:II,hits:IR});
   if(S.impactHistory.length>20)S.impactHistory=S.impactHistory.slice(-20);
   save();render();
 }
 
-// ── LEARN ────────────────────────────────────────────
-function renderLearn() {
-  const est=computeEst();
+// ─── LEARN ────────────────────────────────────────────────────
+function rLearn(){
+  const est=compEst();
   const done=S.tasks.filter(t=>t.status==='Done'&&t.startDate&&t.endDate);
-  const aT=done.filter(t=>t.type==='Task');
-  const aS=done.filter(t=>t.type==='Sub-task');
+  const aT=done.filter(t=>t.type==='Task'), aS=done.filter(t=>t.type==='Sub-task');
   const avgT=aT.length?(aT.reduce((s,t)=>s+diffD(t.startDate,t.endDate),0)/aT.length).toFixed(1):'-';
   const avgS=aS.length?(aS.reduce((s,t)=>s+diffD(t.startDate,t.endDate),0)/aS.length).toFixed(1):'-';
-
-  // 팀별 그룹으로 rows 구성
-  const teamColors={기획:'#c8a84b',디자인:'#e96d9b',퍼블:'#00c2d4',개발:'#3d9be9'};
-  let tableRows='';
-  TEAM_ROLES.forEach(role=>{
-    const members=TEAM_MEMBERS[role];
-    const tc2=teamColors[role];
-    members.forEach(m=>{
-      TYPES.forEach(type=>{
-        const d=est[m]?.[type];
-        if(d) tableRows+=`<tr>
-          <td style="padding:8px 10px">
-            <span style="font-size:9px;padding:1px 6px;border-radius:3px;background:${tc2}18;color:${tc2};font-weight:700;margin-right:5px">${role}</span>
-            ${esc(m)}${m===ME?'<span style="font-size:9px;color:#c8a84b;margin-left:4px">(나)</span>':m===TEAM?`<span style="font-size:9px;color:#e96d9b;margin-left:4px">(책임님)</span>`:''}
-          </td>
-          <td style="padding:8px 10px"><span class="tag" style="background:${TC[type]}18;color:${TC[type]}">${type}</span></td>
-          <td style="padding:8px 10px"><span style="color:#c8a84b;font-weight:700">${d.avg}일</span></td>
-          <td style="padding:8px 10px"><span style="color:#3d9be9;font-size:11px">${d.count}건</span></td>
-          <td style="padding:8px 10px;color:#444460;font-size:11px">${d.samples.join(', ')}일</td>
-        </tr>`;
-      });
-    });
-  });
-
-  // 팀 멤버 현황 카드
-  const teamCardHtml=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px">
-    ${TEAM_ROLES.map(role=>{
-      const tc2=teamColors[role];
-      return `<div style="background:var(--surface);border:1px solid ${tc2}20;border-radius:10px;padding:12px 14px">
-        <div style="font-size:10px;font-weight:700;color:${tc2};letter-spacing:1px;margin-bottom:8px">${role}팀</div>
-        ${TEAM_MEMBERS[role].map(m=>`<div style="font-size:12px;color:#aaa;padding:3px 0;display:flex;align-items:center;gap:5px">
-          <span style="width:5px;height:5px;border-radius:99px;background:${tc2};display:inline-block"></span>
-          ${esc(m)}${m===ME?'<span style="font-size:9px;color:#c8a84b">(나)</span>':m===TEAM?'<span style="font-size:9px;color:#e96d9b">(책임님)</span>':''}
-        </div>`).join('')}
-      </div>`;
-    }).join('')}
+  const tc=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px">
+    ${ROLES.map(r=>`<div style="background:var(--sf);border:1px solid ${RC[r]}20;border-radius:10px;padding:12px 14px">
+      <div style="font-size:10px;font-weight:700;color:${RC[r]};letter-spacing:1px;margin-bottom:8px">${r}팀</div>
+      ${MEMBERS[r].map(m=>`<div style="font-size:12px;color:#aaa;padding:3px 0;display:flex;align-items:center;gap:5px"><span style="width:5px;height:5px;border-radius:99px;background:${RC[r]};display:inline-block"></span>${esc(m)}${m===ME?'<span style="font-size:9px;color:var(--gold);margin-left:3px">(나)</span>':m===TEAM?'<span style="font-size:9px;color:#e96d9b;margin-left:3px">(책임님)</span>':''}</div>`).join('')}
+    </div>`).join('')}
   </div>`;
-
-  return `
-  <div class="stats-row">
-    <div class="stat-box"><h5>총 완료</h5><div class="sv">${done.length}</div><div style="font-size:10px;color:#444460;margin-top:2px">학습 데이터</div></div>
-    <div class="stat-box"><h5>Task 평균</h5><div class="sv">${avgT}</div><div style="font-size:10px;color:#444460;margin-top:2px">일</div></div>
-    <div class="stat-box"><h5>Sub-task 평균</h5><div class="sv">${avgS}</div><div style="font-size:10px;color:#444460;margin-top:2px">일</div></div>
-    <div class="stat-box"><h5>이관 업무</h5><div class="sv" style="color:#e96d9b">${getTransferred().length}</div><div style="font-size:10px;color:#444460;margin-top:2px">건</div></div>
+  let rows='';
+  ROLES.forEach(role=>MEMBERS[role].forEach(m=>TYPES.forEach(type=>{
+    const d=est[m]?.[type];
+    if(d) rows+=`<tr>
+      <td style="padding:8px 10px"><span class="tagr" style="background:${RC[role]}18;color:${RC[role]};margin-right:5px">${role}</span>${esc(m)}${m===ME?'<span style="font-size:9px;color:var(--gold);margin-left:4px">(나)</span>':m===TEAM?'<span style="font-size:9px;color:#e96d9b;margin-left:4px">(책임님)</span>':''}</td>
+      <td style="padding:8px 10px"><span class="tag" style="background:${TC[type]}18;color:${TC[type]}">${type}</span></td>
+      <td style="padding:8px 10px"><span style="color:var(--gold);font-weight:700">${d.avg}일</span></td>
+      <td style="padding:8px 10px;color:var(--blue);font-size:11px">${d.count}건</td>
+      <td style="padding:8px 10px;color:#444460;font-size:11px">${d.samples.join(', ')}일</td>
+    </tr>`;
+  })));
+  return `<div class="stats-row">
+    <div class="stat-box"><h5>총 완료</h5><div class="sv">${done.length}</div><div style="font-size:10px;color:#444460">학습 데이터</div></div>
+    <div class="stat-box"><h5>Task 평균</h5><div class="sv">${avgT}</div><div style="font-size:10px;color:#444460">일</div></div>
+    <div class="stat-box"><h5>Sub-task 평균</h5><div class="sv">${avgS}</div><div style="font-size:10px;color:#444460">일</div></div>
+    <div class="stat-box"><h5>이관 업무</h5><div class="sv" style="color:#e96d9b">${getTrans().length}</div><div style="font-size:10px;color:#444460">건</div></div>
   </div>
-
-  <div class="section-label" style="color:#c8a84b;margin-bottom:10px">👥 팀 구성원</div>
-  ${teamCardHtml}
-
-  <div class="section-label" style="color:#c8a84b;margin-bottom:10px">담당자별 학습 현황</div>
-  ${tableRows?`<div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:20px"><table class="learn-table"><thead><tr><th>담당자</th><th>유형</th><th>평균공수</th><th>샘플수</th><th>최근 소요일</th></tr></thead><tbody>${tableRows}</tbody></table></div>`
-  :`<div class="empty"><div class="empty-icon">📊</div><div class="empty-text">학습 데이터 없음</div><div class="empty-sub">업무 완료 처리 시 자동으로 학습돼요</div></div>`}
-
+  <div class="sl" style="color:var(--gold);margin-bottom:10px">👥 팀 구성원</div>${tc}
+  <div class="sl" style="color:var(--gold);margin-bottom:10px">담당자별 학습 현황</div>
+  ${rows?`<div style="background:var(--sf);border:1px solid var(--bd);border-radius:12px;overflow:hidden;margin-bottom:20px"><table class="ltable"><thead><tr><th>담당자</th><th>유형</th><th>평균공수</th><th>샘플수</th><th>최근 소요일</th></tr></thead><tbody>${rows}</tbody></table></div>`
+  :`<div class="empty"><div style="font-size:30px;margin-bottom:8px">📊</div><div style="font-size:14px;color:#666688">아직 학습 데이터가 없어요</div><div style="font-size:12px;color:#333350;margin-top:5px">업무 완료 처리 시 자동 학습돼요</div></div>`}
   <div style="background:#c8a84b08;border:1px solid #c8a84b18;border-radius:12px;padding:16px">
-    <div class="section-label" style="color:#c8a84b;margin-bottom:8px">📌 공수 학습 방법</div>
-    <div style="font-size:12px;color:#888;line-height:1.9">1. 업무 등록 시 <strong style="color:#e4e4f0">담당 팀 + Assignee + 시작일</strong> 입력<br>2. 완료 시 <strong style="color:#e4e4f0">상태 → Done</strong> 변경 (완료일 자동 기록)<br>3. 데이터 누적 시 담당자별 예상 공수 자동 정확화<br>4. 최근 3건에 60% 가중치 → 최신 속도 반영</div>
+    <div class="sl" style="color:var(--gold);margin-bottom:8px">📌 학습 방법</div>
+    <div style="font-size:12px;color:#888;line-height:1.9">1. 업무 등록 시 <strong style="color:#e4e4f0">작업자 + 팀별 시작일</strong> 입력<br>2. 완료 시 <strong style="color:#e4e4f0">상태 → Done</strong> 변경<br>3. 데이터 누적 시 담당자별 예상 공수 자동 정확화<br>4. 최근 3건에 60% 가중치 → 최신 속도 반영</div>
   </div>`;
 }
 
-// ═══════════════════════════════════════════════════
-// ACTIONS
-// ═══════════════════════════════════════════════════
-function toggleWorker(name){
-  if(!fd.workers) fd.workers=[];
-  const idx=fd.workers.indexOf(name);
-  if(idx>-1) fd.workers.splice(idx,1); else fd.workers.push(name);
-  render();
-}
-function go(v){if(v!=='add')editId=null;if(v==='add'&&!editId)resetFd();view=v;render();}
-function resetFd(){fd={type:'Task',status:'To Do',startDate:today(),code:'',summary:'',assignee:ME,dueDate:'',memo:'',isDesign:false,workType:'',workers:[]};editId=null;}
-function cancelForm(){editId=null;resetFd();go('today');}
-function setType(t){syncFd();fd.type=t;fd.dueDate='';render();}
-
-function syncFd(){
-  const m={fCode:'code',fSummary:'summary',fSts:'status',fStart:'startDate',fDue:'dueDate',fMemo:'memo'};
-  Object.entries(m).forEach(([id,key])=>{const el=document.getElementById(id);if(el)fd[key]=el.value;});
-}
-
-function submitForm(){
-  syncFd();
-  if(!fd.summary?.trim()){alert('제목을 입력해주세요');return;}
-  if(!fd.dueDate&&fd.assignee&&fd.startDate){const e=getEst(fd.assignee,fd.type);fd.dueDate=addD(fd.startDate,Math.round(e));}
-  const task={
-    id:editId||Date.now().toString(),
-    code:fd.code||'',type:fd.type||'Task',summary:fd.summary,
-    assignee:fd.assignee||ME,status:fd.status||'To Do',
-    startDate:fd.startDate||today(),dueDate:fd.dueDate||'',
-    endDate:fd.status==='Done'?(fd.dueDate||today()):'',
-    memo:fd.memo||'',isDesign:!!fd.isDesign,
-    workType:fd.workType||'',
-    workers:fd.workers||[],
-    originalAssignee:fd.originalAssignee||null,
-    transferDate:fd.transferDate||null,
-    createdAt:editId?S.tasks.find(t=>t.id===editId)?.createdAt:today()
-  };
-  if(editId){
-    const ex=S.tasks.find(t=>t.id===editId);
-    if(ex?.endDate&&task.status==='Done')task.endDate=ex.endDate;
-    S.tasks=S.tasks.map(t=>t.id===editId?task:t);
-  } else {
-    S.tasks.push(task);
-  }
-  save();editId=null;resetFd();go('today');
-}
-
-function editTask(id){
-  const t=S.tasks.find(t=>t.id===id);if(!t)return;
-  editId=id;fd={...t};view='add';render();
-}
-
-function delTask(id){
-  if(!confirm('삭제할까요?'))return;
-  S.tasks=S.tasks.filter(t=>t.id!==id);save();render();
-}
-
-function setStatus(id,status){
-  S.tasks=S.tasks.map(t=>{
-    if(t.id!==id)return t;
-    const u={...t,status};
-    if(status==='Done'&&!t.endDate)u.endDate=today();
-    return u;
-  });save();render();
-}
-
-// 이지아 → 정희라 이관 등록
-function markTransfer(id){
-  S.tasks=S.tasks.map(t=>{
-    if(t.id!==id)return t;
-    return {...t,originalAssignee:TEAM,assignee:ME,transferDate:today()};
-  });save();render();
-}
-
-// 이관 확인 처리 (알림 제거)
-function confirmTransfer(id){
-  S.tasks=S.tasks.map(t=>{
-    if(t.id!==id)return t;
-    return {...t,originalAssignee:null,transferDate:null};
-  });save();editId=null;resetFd();go('today');
-}
-
-// ═══════════════════════════════════════════════════
-// INIT
-// ═══════════════════════════════════════════════════
-load();
-resetFd();
-render();
-</script>
-</body>
-</html>
+// ═══════════════════════════ ACTIONS ═══════════════════════════
